@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "target": "esnext",
+    "jsx": "react",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "types": ["node", "jest"],
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@efuller/api/*": ["./packages/api/*"],
+      "@efuller/shared/*": ["./packages/shared/*"]
+    },
+  },
+  "include": [
+    "./packages/api/**/*",
+    "./packages/shared/**/*",
+    "./packages/web/**/*",
+  ]
+}

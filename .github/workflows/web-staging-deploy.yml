@@ -1,0 +1,14 @@
+  name: Web Staging Deploy
+  on:
+    workflow_dispatch:
+
+  jobs:
+    deploy:
+      name: Deploy to render.com
+      runs-on: ubuntu-latest
+      steps:
+        - name: Deploy to render.com
+          uses: johnbeynon/render-deploy-action@v0.0.8
+          with:
+            api-key: ${{ secrets.RENDER_TOKEN }}
+            service-id: ${{ secrets.RENDER_SERVICE_ID_WEB }}

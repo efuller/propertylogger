@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  test-database:
+    image: 'postgres'
+    container_name: 'walking-skeleton-test-db'
+    env_file:
+      - .env.test
+    ports:
+      - 5435:5432
+    volumes:
+      - ./db_data:/var/lib/postgresql/data/infra
+    networks:
+      - testing
+networks:
+  testing:
+volumes:
+  db_infra:

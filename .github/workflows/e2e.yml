@@ -1,0 +1,62 @@
+name: Manual E2E Tests
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+          POSTGRES_DB: db-test
+        ports:
+          - 5432:5432
+    env:
+      DATABASE_URL: postgresql://admin:admin@localhost:5432/db-test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ env.CACHE_KEY }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared and api
+        run: npm run api:build
+
+      - name: Build frontend
+        run: npm run web:build
+
+      - name: Run prisma generate
+        run: npm run prisma:generate -w packages/api
+
+      - name: Run prisma reset
+        run: npm run prisma:reset -w packages/api
+
+      - name: Run API
+        run: |
+          npm run api:ci:start:e2e &
+          sleep 5 &&
+          curl http://localhost:3001/health -I
+
+      - name: Run Frontend
+        run: |
+          npm run web:ci &
+          sleep 5 &&
+          curl http://localhost:5173 -I
+
+      - name: Run E2E tests
+        run: npm run web:test:e2e

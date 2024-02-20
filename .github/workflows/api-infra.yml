@@ -1,0 +1,33 @@
+  name: Manual Infrastructure Tests Using Postgres Service
+  on:
+    workflow_dispatch:
+
+  jobs:
+    infra-tests:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgres:latest
+          env:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+            POSTGRES_DB: db-test
+          ports:
+            - 5435:5432
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 18.x
+
+        - name: Install dependencies
+          run: npm ci
+
+        - name: Build packages
+          run: npm run api:build && npm run shared:build
+
+        - name: Run tests
+          run: npm run api:ci:test:infra
