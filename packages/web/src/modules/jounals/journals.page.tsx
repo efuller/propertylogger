@@ -10,7 +10,7 @@ export interface Journal {
 let baseUrl = 'http://localhost:3000';
 
 if (process.env.NODE_ENV === 'production') {
-  baseUrl = 'https://walking-skeleton-api.onrender.com';
+  baseUrl = import.meta.env.VITE_API_URL as string;
 } else if (process.env.NODE_ENV === 'test') {
   baseUrl = 'http://localhost:3001';
 }
