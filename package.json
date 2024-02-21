@@ -6,7 +6,7 @@
   "scripts": {
     "api:build": "npm run shared:build && npm run build -w packages/api",
     "api:start": "npm run start -w packages/api",
-    "api:start:dev": "npm run start:dev -w packages/api",
+    "api:start:dev": "npm run shared:build && npm run start:dev -w packages/api",
     "api:ci:start:e2e": "npm run staging:start:e2e -w packages/api",
     "api:ci:test:e2e": "jest --selectProjects api-staging-e2e -c jest.config.ts",
     "api:ci:test:infra": "jest --selectProjects api-staging-infra -c jest.config.ts",

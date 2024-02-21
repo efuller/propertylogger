@@ -2,7 +2,7 @@ version: '3.8'
 services:
   dev-database:
     image: 'postgres'
-    container_name: 'walking-skeleton-dev-db'
+    container_name: 'propertylogger-dev-db'
     env_file:
       - .env.development
     ports:
