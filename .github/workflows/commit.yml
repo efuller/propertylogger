@@ -24,6 +24,8 @@
           run: npm run lint
         - name: Type check
           run: npm run tsc
+        - name: Build shared
+          run: npm run shared:build
         - name: Api unit tests
           run: npm run api:test:unit
         - name: Web unit tests
