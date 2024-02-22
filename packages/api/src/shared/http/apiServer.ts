@@ -36,11 +36,11 @@ export class ApiServer {
       res.send({ ok: true }).status(200);
     });
 
-    this.app.get('/journal', async (req, res) => {
+    this.app.get('/journal', this.setupAuthMiddleware(), async (req, res) => {
       await this.controllers.journal.getAll(req, res);
     });
 
-    this.app.post('/journal', async (req, res) => {
+    this.app.post('/journal', this.setupAuthMiddleware(), async (req, res) => {
       await this.controllers.journal.create(req, res);
     });
 
