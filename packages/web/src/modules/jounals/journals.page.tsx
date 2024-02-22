@@ -52,7 +52,7 @@ export const JournalsPage = () => {
   if (!isAuthenticated) {
     return (
       <div>
-        <h1>Welcome to the Journal App</h1>
+        <h1>Welcome to PropertyLogger</h1>
         <button onClick={() => loginWithRedirect()}>Login</button>
       </div>
     );
