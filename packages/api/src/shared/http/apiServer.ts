@@ -3,6 +3,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import { ProcessService } from '@efuller/shared';
 import { JournalController } from '@efuller/api/src/modules/journals/journal.controller';
+import { auth } from 'express-oauth2-jwt-bearer';
 
 interface Controllers {
   journal: JournalController;
@@ -42,6 +43,26 @@ export class ApiServer {
     this.app.post('/journal', async (req, res) => {
       await this.controllers.journal.create(req, res);
     });
+
+    this.app.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
+      res.send({ ok: true }).status(200);
+    });
+  }
+
+  private setupAuthMiddleware() {
+    const audience = process.env.AUTH0_AUDIENCE || '';
+    const issuerBaseURL = process.env.AUTH0_ISSUER_BASE_URL || '';
+
+    if (!audience || !issuerBaseURL) {
+      throw new Error('Missing environment variables for Auth0');
+    }
+
+    const jwtCheck = auth({
+      audience,
+      issuerBaseURL,
+      tokenSigningAlg: 'RS256'
+    });
+    return jwtCheck;
   }
 
   async start() {
