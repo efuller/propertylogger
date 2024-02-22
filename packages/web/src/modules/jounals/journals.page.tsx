@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { AddJournalForm } from './components/addJournal.form';
 import { ApiClient } from '../../shared/apiClient/apiClient';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -23,12 +23,9 @@ export const JournalsPage = () => {
     loginWithRedirect,
     isAuthenticated,
     isLoading,
-    getAccessTokenSilently,
     logout
   } = useAuth0();
   const [journals, setJournals] = React.useState<Journal[]>([]);
-
-  const getTokenSilently = useCallback(async () => getAccessTokenSilently, [getAccessTokenSilently]);
 
   const handleOnSubmit = async (newJournal: Journal) => {
     await apiClient.post('/journal', newJournal);
@@ -37,15 +34,13 @@ export const JournalsPage = () => {
 
   useEffect(() => {
     const fetchJournals = async () => {
-      const token = await getTokenSilently();
-      console.log('token', token);
       const response = await apiClient.get<Journal[]>('/journal');
       if (response.success && response.data) {
         setJournals([...response.data]);
       }
     };
     fetchJournals();
-  }, [getTokenSilently]);
+  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
