@@ -19,7 +19,13 @@ if (process.env.NODE_ENV === 'production') {
 const apiClient = new ApiClient(baseUrl);
 
 export const JournalsPage = () => {
-  const { loginWithRedirect, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+  const {
+    loginWithRedirect,
+    isAuthenticated,
+    isLoading,
+    getAccessTokenSilently,
+    logout
+  } = useAuth0();
   const [journals, setJournals] = React.useState<Journal[]>([]);
 
   const handleOnSubmit = async (newJournal: Journal) => {
@@ -54,6 +60,10 @@ export const JournalsPage = () => {
 
   return (
     <div>
+      <button
+        onClick={() => logout({ logoutParams: { returnTo: window.location.origin }})}>
+        Logout
+      </button>
       <h1>Add Journal</h1>
       <AddJournalForm onSubmit={handleOnSubmit} />
       <hr />
