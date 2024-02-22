@@ -35,7 +35,7 @@ export class JournalService {
 
     if (!result.length) {
       return {
-        success: false,
+        success: true,
         data: [],
       }
     }

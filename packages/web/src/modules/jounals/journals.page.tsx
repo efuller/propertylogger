@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { AddJournalForm } from './components/addJournal.form';
 import { ApiClient } from '../../shared/apiClient/apiClient';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export interface Journal {
   title: string;
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 const apiClient = new ApiClient(baseUrl);
 
 export const JournalsPage = () => {
+  const { loginWithRedirect, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
   const [journals, setJournals] = React.useState<Journal[]>([]);
 
   const handleOnSubmit = async (newJournal: Journal) => {
@@ -27,6 +29,8 @@ export const JournalsPage = () => {
 
   useEffect(() => {
     const fetchJournals = async () => {
+      const token = await getAccessTokenSilently();
+      console.log('token', token);
       const response = await apiClient.get<Journal[]>('/journal');
       if (response.success && response.data) {
         setJournals([...response.data]);
@@ -34,6 +38,19 @@ export const JournalsPage = () => {
     };
     fetchJournals();
   }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div>
+        <h1>Welcome to the Journal App</h1>
+        <button onClick={() => loginWithRedirect()}>Login</button>
+      </div>
+    );
+  }
 
   return (
     <div>
