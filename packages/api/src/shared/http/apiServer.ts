@@ -1,5 +1,5 @@
 import { Server } from 'http';
-import express, { Application } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { ProcessService } from '@efuller/shared';
 import { JournalController } from '@efuller/api/src/modules/journals/journal.controller';
@@ -46,6 +46,14 @@ export class ApiServer {
 
     this.app.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
       res.send({ ok: true }).status(200);
+    });
+
+    this.app.use(function(err: Error, req: Request, res: Response, next: NextFunction) {
+      if (err.name === "UnauthorizedError") {
+        return res.status(401).send({ msg: "Invalid token" });
+      }
+
+      next(err);
     });
   }
 
