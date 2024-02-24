@@ -15,9 +15,11 @@ export class RestApiDriver {
       .post(path)
       .set('Accept', 'application/json')
       .send(data);
+
     return {
-      success: true,
+      success: response.error ? false : true,
       data: response.body,
+      error: response.error,
     };
   }
 }
