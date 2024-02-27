@@ -5,8 +5,42 @@ import { ProcessService } from '@efuller/shared';
 import { JournalController } from '@efuller/api/src/modules/journals/journal.controller';
 import { auth } from 'express-oauth2-jwt-bearer';
 
-interface Controllers {
-  journal: JournalController;
+interface ApiServerRouters {
+  journal: JournalRouter;
+}
+
+export class JournalRouter {
+  private readonly router: express.Router;
+  constructor(
+    private readonly controller: JournalController
+  ) {
+    this.router = express.Router();
+    this.setupRoutes();
+  }
+
+  setupRoutes() {
+    this.router.get(
+      '/journal',
+      (req, res, next) => {
+        console.log('journal route', req.headers);
+        console.log('Authorization', req.headers.authorization);
+        next();
+      },
+      async (req, res) => {
+        console.log('REQ AUTH', req.auth);
+        await this.controller.getAll(req, res);
+      });
+
+    this.router.post(
+      '/journal',
+      async (req, res) => {
+        await this.controller.create(req, res);
+      });
+  }
+
+  getRouter() {
+    return this.router;
+  }
 }
 
 export class ApiServer {
@@ -15,7 +49,7 @@ export class ApiServer {
   private readonly port: number;
   private running: boolean;
 
-  constructor(private readonly controllers: Controllers) {
+  constructor(private readonly routers: ApiServerRouters) {
     const env = process.env.NODE_ENV || 'development';
     this.server = null;
     this.app = express();
@@ -36,19 +70,14 @@ export class ApiServer {
       res.send({ ok: true }).status(200);
     });
 
-    this.app.get('/journal', this.setupAuthMiddleware(), async (req, res) => {
-      await this.controllers.journal.getAll(req, res);
-    });
-
-    this.app.post('/journal', this.setupAuthMiddleware(), async (req, res) => {
-      await this.controllers.journal.create(req, res);
-    });
+    this.app.use(this.routers.journal.getRouter());
 
     this.app.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
       res.send({ ok: true }).status(200);
     });
 
     this.app.use(function(err: Error, req: Request, res: Response, next: NextFunction) {
+      console.log('error', err);
       if (err.name === "UnauthorizedError") {
         return res.status(401).send({ msg: "Invalid token" });
       }
