@@ -13,6 +13,7 @@
     "api:test:e2e": "jest --selectProjects api-e2e -c jest.config.ts",
     "api:test:e2e:watch": "jest -c --selectProjects api-e2e jest.config.ts --watchAll",
     "api:test:unit": "jest --selectProjects api-unit -c jest.config.ts",
+    "api:test:unit:watch": "jest --selectProjects api-unit -c jest.config.ts --watchAll",
     "api:test:infra": "jest --selectProjects api-infra -c jest.config.ts",
     "api:test:infra:watch": "jest --selectProjects api-infra -c jest.config.ts --watchAll",
     "lint": "eslint \"**/*.{ts,tsx}\"",
