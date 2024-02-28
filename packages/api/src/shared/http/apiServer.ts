@@ -2,45 +2,11 @@ import { Server } from 'http';
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { ProcessService } from '@efuller/shared';
-import { JournalController } from '@efuller/api/src/modules/journals/journal.controller';
 import { auth } from 'express-oauth2-jwt-bearer';
+import { JournalRouter } from '@efuller/api/src/shared/http/routers/journalRouter';
 
 interface ApiServerRouters {
   journal: JournalRouter;
-}
-
-export class JournalRouter {
-  private readonly router: express.Router;
-  constructor(
-    private readonly controller: JournalController
-  ) {
-    this.router = express.Router();
-    this.setupRoutes();
-  }
-
-  setupRoutes() {
-    this.router.get(
-      '/journal',
-      (req, res, next) => {
-        console.log('journal route', req.headers);
-        console.log('Authorization', req.headers.authorization);
-        next();
-      },
-      async (req, res) => {
-        console.log('REQ AUTH', req.auth);
-        await this.controller.getAll(req, res);
-      });
-
-    this.router.post(
-      '/journal',
-      async (req, res) => {
-        await this.controller.create(req, res);
-      });
-  }
-
-  getRouter() {
-    return this.router;
-  }
 }
 
 export class ApiServer {
