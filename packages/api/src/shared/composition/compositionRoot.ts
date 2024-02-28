@@ -1,7 +1,10 @@
-import { ApiServer, JournalRouter } from '../http/apiServer';
+import { ApiServer } from '../http/apiServer';
 import { Database } from '@efuller/api/src/shared/persistence/database/database';
 import { JournalController } from '@efuller/api/src/modules/journals/journal.controller';
 import { JournalService } from '@efuller/api/src/modules/journals/journal.service';
+import { AuthMiddleware } from '@efuller/api/src/shared/http/middleware/authMiddleware';
+import { Auth0AuthService } from '@efuller/api/src/modules/auth/auth0AuthService';
+import { JournalRouter } from '@efuller/api/src/shared/http/routers/journalRouter';
 
 export class CompositionRoot {
   private readonly db: Database;
@@ -13,9 +16,11 @@ export class CompositionRoot {
   }
 
   createApiServer() {
+    const authService = new Auth0AuthService();
+    const authMiddleware = new AuthMiddleware(authService);
     const journalService = new JournalService(this.db);
     const journalController = new JournalController(journalService);
-    const journalRouter = new JournalRouter(journalController);
+    const journalRouter = new JournalRouter(authMiddleware, journalController);
 
     return new ApiServer({ journal: journalRouter });
   }
