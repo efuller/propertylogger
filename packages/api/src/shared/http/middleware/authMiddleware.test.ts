@@ -36,7 +36,6 @@ describe('authMiddleware', () => {
     authMiddleware.handle()(req, res, next);
 
     // Assert
-    expect(authServiceSpy.timesCalled('generateAuthMiddleware')).toBe(1)
     expect(authServiceSpy.timesCalled('auth')).toBe(1)
     expect(authServiceSpy.toHaveBeenCalledBy('checkJwt', 'auth')).toBe(true);
   });

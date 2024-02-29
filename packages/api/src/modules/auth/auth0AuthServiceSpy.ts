@@ -32,16 +32,8 @@ export class MockAuth0AuthService implements AuthService {
     }
   }
 
-  generateAuthMiddleware() {
-    this.addCall('generateAuthMiddleware', {});
-
-    const checkJwt = this.auth(this.getAudience(), this.getIssuerBaseURL(), this.getHashType());
-
-    return checkJwt;
-  }
-
   authorize(req: Request, res: Response, next: NextFunction) {
-    const middleware = this.generateAuthMiddleware();
+    const middleware = this.auth(this.getAudience(), this.getIssuerBaseURL(), this.getHashType());
     this.addCall('authorize', {params: [req, res, next]});
     middleware(req, res, next);
   }
