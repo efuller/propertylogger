@@ -23,6 +23,7 @@ export class JournalRouter implements ApiRouter {
 
     this.router.post(
       '/journal',
+      this.authMiddleware.handle(),
       async (req, res) => {
         await this.controller.create(req, res);
       });
