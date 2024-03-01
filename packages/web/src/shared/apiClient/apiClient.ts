@@ -1,7 +1,7 @@
 import { ApiResponse } from '@efuller/shared/dist/api';
 
 interface Options<T = NonNullable<unknown>> {
-  headers: {
+  headers?: {
     Authorization: string;
   },
   data?: T

@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { AddJournalForm } from './components/addJournal.form';
 import { ApiClient } from '../../shared/apiClient/apiClient';
-import { useAuth0 } from '@auth0/auth0-react';
+import { SignInButton, SignOutButton, useAuth, useUser } from '@clerk/clerk-react';
 
 export interface Journal {
   title: string;
@@ -19,19 +19,13 @@ if (process.env.NODE_ENV === 'production') {
 const apiClient = new ApiClient(baseUrl);
 
 export const JournalsPage = () => {
-  const {
-    loginWithRedirect,
-    isAuthenticated,
-    isLoading,
-    getAccessTokenSilently,
-    logout
-  } = useAuth0();
+  const { getToken } = useAuth();
+  const { isSignedIn, isLoaded } = useUser();
   const [journals, setJournals] = React.useState<Journal[]>([]);
 
-  const getTokenSilently = useCallback(getAccessTokenSilently, [getAccessTokenSilently]);
 
   const handleOnSubmit = async (newJournal: Journal) => {
-    const token = await getTokenSilently();
+    const token = await getToken();
     await apiClient.post('/journal', {
       headers: {
         Authorization: `Bearer ${token}`
@@ -42,9 +36,9 @@ export const JournalsPage = () => {
   };
 
   useEffect(() => {
+    if (!isSignedIn) return;
     const fetchJournals = async () => {
-      const token = await getTokenSilently();
-      console.log('token', token);
+      const token = await getToken();
       const response = await apiClient.get<Journal[]>(
         '/journal',
         {
@@ -58,27 +52,26 @@ export const JournalsPage = () => {
       }
     };
     fetchJournals();
-  }, [getTokenSilently]);
+  }, [getToken, isSignedIn]);
 
-  if (isLoading) {
+  if (!isLoaded) {
     return <div>Loading...</div>;
   }
 
-  if (!isAuthenticated) {
+  if (!isSignedIn) {
     return (
       <div>
         <h1>Welcome to PropertyLogger</h1>
-        <button onClick={() => loginWithRedirect()}>Login</button>
+        <SignInButton />
       </div>
     );
   }
 
   return (
     <div>
-      <button
-        onClick={() => logout({ logoutParams: { returnTo: window.location.origin }})}>
-        Logout
-      </button>
+      <SignOutButton signOutCallback={() => {
+        window.location.href = '/'
+      }} />
       <h1>Add Journal</h1>
       <AddJournalForm onSubmit={handleOnSubmit} />
       <hr />
