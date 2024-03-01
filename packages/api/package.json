@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.10",
     "@efuller/shared": "^0.1.0",
     "@prisma/client": "^5.7.0",
     "cors": "^2.8.5",
