@@ -5,8 +5,10 @@ import { ApiResponse } from '@efuller/shared/src/api';
 export class RestApiDriver {
   constructor(private http: Server) {}
 
-  async get(path: string) {
-    const response =  request(this.http).get(path);
+  async get(path: string, headers: Record<string, string> = {}) {
+    const response =  request(this.http)
+      .get(path)
+      .set(headers);
     return response;
   }
 
@@ -15,9 +17,11 @@ export class RestApiDriver {
       .post(path)
       .set('Accept', 'application/json')
       .send(data);
+
     return {
-      success: true,
+      success: response.error ? false : true,
       data: response.body,
+      error: response.error,
     };
   }
 }

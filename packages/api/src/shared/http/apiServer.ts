@@ -1,12 +1,12 @@
 import { Server } from 'http';
-import express, { Application } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { ProcessService } from '@efuller/shared';
-import { JournalController } from '@efuller/api/src/modules/journals/journal.controller';
 import { auth } from 'express-oauth2-jwt-bearer';
+import { JournalRouter } from '@efuller/api/src/shared/http/routers/journalRouter';
 
-interface Controllers {
-  journal: JournalController;
+interface ApiServerRouters {
+  journal: JournalRouter;
 }
 
 export class ApiServer {
@@ -15,7 +15,7 @@ export class ApiServer {
   private readonly port: number;
   private running: boolean;
 
-  constructor(private readonly controllers: Controllers) {
+  constructor(private readonly routers: ApiServerRouters) {
     const env = process.env.NODE_ENV || 'development';
     this.server = null;
     this.app = express();
@@ -36,16 +36,19 @@ export class ApiServer {
       res.send({ ok: true }).status(200);
     });
 
-    this.app.get('/journal', this.setupAuthMiddleware(), async (req, res) => {
-      await this.controllers.journal.getAll(req, res);
-    });
-
-    this.app.post('/journal', this.setupAuthMiddleware(), async (req, res) => {
-      await this.controllers.journal.create(req, res);
-    });
+    this.app.use(this.routers.journal.getRouter());
 
     this.app.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
       res.send({ ok: true }).status(200);
+    });
+
+    this.app.use(function(err: Error, req: Request, res: Response, next: NextFunction) {
+      console.log('error', err);
+      if (err.name === "UnauthorizedError") {
+        return res.status(401).send({ msg: "Invalid token" });
+      }
+
+      next(err);
     });
   }
 

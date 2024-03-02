@@ -1,13 +1,6 @@
 import { Database } from '@efuller/api/src/shared/persistence/database/database';
 import { ApiResponse } from '@efuller/shared/src/api';
-
-export interface Journal {
-  id: string;
-  title: string;
-  content: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Journal } from '../domain/journal';
 
 export class JournalService {
   constructor(private readonly db: Database) {}

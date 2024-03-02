@@ -3,7 +3,7 @@ import { RestApiDriver } from '../../../src/shared/http/restApiDriver';
 import { Server } from 'http';
 import { CompositionRoot } from '@efuller/api/src/shared/composition/compositionRoot';
 import { ApiResponse } from '@efuller/shared/src/api';
-import { Journal } from '@efuller/api/src/modules/journals/journal.service';
+import { Journal } from '@efuller/api/src/modules/journals/application/journal.service';
 
 const feature = loadFeature('./packages/shared/tests/journal/e2e/addJournal.feature', { tagFilter: '@api' });
 

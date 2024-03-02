@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { JournalService } from './journal.service';
+import { JournalService } from '../application/journal.service';
 
 export class JournalController {
   constructor(private readonly journalService: JournalService) {}
