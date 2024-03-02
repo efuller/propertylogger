@@ -1,5 +1,5 @@
-import { Handler } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 
 export interface Middleware {
-  handle(): Handler
+  handle(req: Request, res: Response, next: NextFunction): express.Handler
 }

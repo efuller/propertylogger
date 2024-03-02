@@ -28,7 +28,7 @@ export class MockAuth0AuthService implements AuthService {
           calledBy: 'auth'
         }
       );
-      return true
+      return true;
     }
   }
 
