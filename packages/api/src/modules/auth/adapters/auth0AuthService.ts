@@ -1,4 +1,4 @@
-import { AuthService } from '@efuller/api/src/modules/auth/authService';
+import { AuthService } from '@efuller/api/src/modules/auth/application/service/authService';
 import express, { NextFunction, Request, Response } from 'express';
 import { auth } from 'express-oauth2-jwt-bearer';
 

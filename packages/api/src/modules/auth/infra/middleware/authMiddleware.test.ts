@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthMiddleware } from '@efuller/api/src/shared/http/middleware/authMiddleware';
-import { Auth0AuthService } from '@efuller/api/src/modules/auth/auth0AuthService';
-import { MockAuth0AuthService } from '@efuller/api/src/modules/auth/auth0AuthServiceSpy';
+import { AuthMiddleware } from '@efuller/api/src/modules/auth/infra/middleware/authMiddleware';
+import { Auth0AuthService } from '@efuller/api/src/modules/auth/adapters/auth0AuthService';
+import { MockAuth0AuthService } from '@efuller/api/src/modules/auth/adapters/auth0AuthServiceSpy';
 
 describe('authMiddleware', () => {
   it('should call the auth middleware', () => {

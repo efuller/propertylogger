@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { AuthService } from './authService';
+import { AuthService } from '../application/service/authService';
 import { Call } from '@efuller/api/tests/shared/spy';
 
 export class MockAuth0AuthService implements AuthService {

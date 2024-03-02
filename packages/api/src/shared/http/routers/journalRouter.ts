@@ -1,6 +1,6 @@
 import express from 'express';
-import { AuthMiddleware } from '@efuller/api/src/shared/http/middleware/authMiddleware';
-import { JournalController } from '@efuller/api/src/modules/journals/journal.controller';
+import { AuthMiddleware } from '@efuller/api/src/modules/auth/infra/middleware/authMiddleware';
+import { JournalController } from '@efuller/api/src/modules/journals/adapters/journal.controller';
 import { ApiRouter } from '@efuller/api/src/shared/http/routers/router';
 
 export class JournalRouter implements ApiRouter {
