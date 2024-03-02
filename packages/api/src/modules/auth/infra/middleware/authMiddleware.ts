@@ -1,6 +1,6 @@
 import { Middleware } from '@efuller/api/src/shared/http/middleware/middleware';
 import express, { NextFunction, Request, Response } from 'express';
-import { AuthService } from '@efuller/api/src/modules/auth/application/service/authService';
+import { AuthService } from '@efuller/api/src/modules/auth/application/auth.service';
 
 export class AuthMiddleware implements Middleware {
   constructor(private readonly authService: AuthService) {}
