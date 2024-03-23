@@ -6,7 +6,11 @@ describe('authMiddleware', () => {
   it('should call the auth middleware using a manual spy', () => {
     const authServiceSpy = new MockAuth0AuthService();
     const authMiddleware = new AuthMiddleware(authServiceSpy);
-    const req = {} as Request;
+    const req = {
+      headers: {
+        authorization: 'Bearer token'
+      }
+    } as Request;
     const res = {} as Response;
     const next: NextFunction = () => null;
 

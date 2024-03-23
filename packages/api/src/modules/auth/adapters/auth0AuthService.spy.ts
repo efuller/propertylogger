@@ -28,6 +28,12 @@ export class MockAuth0AuthService implements AuthService {
           calledBy: 'auth'
         }
       );
+
+      if (!req.headers.authorization) {
+        res.status(401).send('Unauthorized');
+        return;
+      }
+
       return true;
     }
   }

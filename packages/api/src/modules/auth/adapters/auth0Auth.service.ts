@@ -6,7 +6,6 @@ export class Auth0AuthService implements AuthService {
   getAudience() {
     return process.env.AUTH0_AUDIENCE || '';
   }
-
   getIssuerBaseURL() {
     return process.env.AUTH0_ISSUER_BASE_URL || '';
   }
