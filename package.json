@@ -26,7 +26,7 @@
     "web:ci": "npm run ci:dev -w packages/web",
     "web:build": "npm run build -w packages/web",
     "web:test": "npm run test -w packages/web",
-    "web:test:watch": "npm run test:watch -w packages/web",
+    "web:test:watch": "jest --selectProjects web -c jest.config.ts --watchAll",
     "web:test:e2e": "jest --selectProjects web-e2e -c jest.config.ts",
     "web:test:e2e:watch": "jest --selectProjects web-e2e -c jest.config.ts --watchAll"
   },
