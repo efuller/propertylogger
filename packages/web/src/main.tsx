@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Auth0Provider } from '@auth0/auth0-react';
-import App from './App';
 import './index.css';
+import { CompositionRoot } from './compositionRoot.tsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
@@ -12,17 +12,13 @@ if (!domain || !clientId || !audience) {
   throw new Error('Missing Auth0 configuration');
 }
 
+const compositionRoot = new CompositionRoot();
+const router = compositionRoot.getRouter();
+const routeMap = router.getRouteMap();
+const browserRouter = createBrowserRouter(routeMap);
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Auth0Provider
-      domain={domain}
-      clientId={clientId}
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience
-      }}
-    >
-      <App />
-    </Auth0Provider>
+    <RouterProvider router={browserRouter} />
   </React.StrictMode>,
 );
