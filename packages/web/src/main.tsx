@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { CompositionRoot } from './compositionRoot.tsx';
+import { compositionRoot } from './compositionRoot.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
@@ -12,7 +12,6 @@ if (!domain || !clientId || !audience) {
   throw new Error('Missing Auth0 configuration');
 }
 
-const compositionRoot = new CompositionRoot();
 const router = compositionRoot.getRouter();
 const routeMap = router.getRouteMap();
 const browserRouter = createBrowserRouter(routeMap);

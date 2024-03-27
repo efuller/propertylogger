@@ -1,25 +1,57 @@
 import { action, makeObservable, observable } from 'mobx';
-import { AuthApi } from './auth.api.ts';
+import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
+
+const domain = import.meta.env.VITE_AUTH0_DOMAIN;
+const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
 export class AuthRepo {
-  public isAuthenticated: boolean;
+  public auth0: Auth0Client | null;
 
-  constructor(private authApi: AuthApi) {
+  constructor() {
     makeObservable(this, {
-      isAuthenticated: observable,
-      getIsAuthenticated: action,
+      auth0: observable,
+      isAuthenticated: action,
       login: action,
+      initialize: action,
     });
-    this.isAuthenticated = false;
+    this.auth0 = null;
   }
 
-  public async getIsAuthenticated() {
-    return await this.authApi.isAuthenticated();
+  public async isAuthenticated() {
+    const result = await this.auth0?.isAuthenticated();
+    return result;
   }
 
   public async login() {
-    await this.authApi.login();
-    this.isAuthenticated = true;
+    console.log('logging in', this.auth0);
+    await this.auth0?.loginWithRedirect();
+  }
+
+  public async logout() {
+    await this.auth0?.logout();
+  }
+
+  public async initialize() {
+    this.auth0 = await createAuth0Client({
+      domain,
+      clientId,
+      authorizationParams: {
+        redirect_uri: `${window.location.origin}/logging-in`,
+        audience,
+        scope: 'openid profile email',
+      },
+      cacheLocation: 'localstorage',
+    });
+  }
+
+  public async handleRedirectCallback() {
+    await this.auth0?.handleRedirectCallback();
+    await this.auth0?.isAuthenticated();
+  }
+
+  public async refreshSession() {
+    await this.auth0?.checkSession();
   }
 }
 
