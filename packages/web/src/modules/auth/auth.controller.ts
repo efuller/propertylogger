@@ -26,9 +26,5 @@ export class AuthController {
   async logout() {
     await this.authRepo.logout();
   }
-
-  async refreshSession() {
-    return await this.authRepo.refreshSession();
-  }
 }
 

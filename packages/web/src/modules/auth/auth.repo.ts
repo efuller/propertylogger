@@ -19,6 +19,11 @@ export class AuthRepo {
   }
 
   public async isAuthenticated() {
+    if (!this.auth0) {
+      await this.initialize();
+      await this.refreshSession();
+    }
+
     const result = await this.auth0?.isAuthenticated();
     return result;
   }
@@ -46,8 +51,12 @@ export class AuthRepo {
   }
 
   public async handleRedirectCallback() {
-    await this.auth0?.handleRedirectCallback();
-    await this.auth0?.isAuthenticated();
+    try {
+      await this.auth0?.handleRedirectCallback();
+      await this.auth0?.isAuthenticated();
+    } catch (error) {
+      throw new Error('Error handling redirect callback');
+    }
   }
 
   public async refreshSession() {

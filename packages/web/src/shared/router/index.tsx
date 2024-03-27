@@ -16,7 +16,7 @@ export const hasAuthParams = (searchParams = window.location.search): boolean =>
 export class AppRouter {
   constructor(private authController: AuthController) {}
 
-  private async isAuthenticated() {
+  private async hasAccess() {
     if (!this.authController.authInitialized()) {
       await this.authController.initializeAuth();
     }
@@ -30,26 +30,16 @@ export class AppRouter {
     return true;
   }
 
-  public async initialize() {
-    if (!this.authController.authInitialized()) {
-      await this.authController.initializeAuth();
-    }
-  }
-
   getRouteMap(): RouteObject[] {
     return [
       {
         path: '/logging-in',
         element: <LoggingInPage />,
         loader: async () => {
-          await this.initialize();
           await this.authController.isAuthenticated();
+
           if (hasAuthParams()) {
-            await this.authController.handleRedirectCallback();
-          } else {
-            await this.authController.refreshSession();
-            await this.isAuthenticated();
-            return redirect('/app/dashboard');
+              await this.authController.handleRedirectCallback();
           }
           return redirect('/app/dashboard');
         }
@@ -58,7 +48,7 @@ export class AppRouter {
         path: '/',
         element: <HomePage />,
         loader: async () => {
-          await this.initialize();
+          await this.authController.initializeAuth();
           return null;
         }
       },
@@ -66,9 +56,9 @@ export class AppRouter {
         path: 'app',
         element: <AppPage />,
         loader: async () => {
-          const authenticated = await this.isAuthenticated();
+          const hasAccess = await this.hasAccess();
 
-          if (!authenticated) {
+          if (!hasAccess) {
             return redirect('/');
           }
           return null;
