@@ -60,6 +60,7 @@ export default async (): Promise<Config> => ({
     {
       displayName: 'web',
       preset: "ts-jest",
+      testEnvironment: "jsdom",
       testMatch: ['**/@(src|tests)/**/*.@(spec|test).@(ts|tsx)'],
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
