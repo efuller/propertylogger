@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Journal } from '../journals.page';
+import { Journal } from '../journals.page.tsx';
 
 type Props = {
   onSubmit: (data: Journal) => void;
