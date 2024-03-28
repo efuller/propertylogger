@@ -62,5 +62,10 @@ export class AuthRepo {
   public async refreshSession() {
     await this.auth0?.checkSession();
   }
+
+  public async getToken() {
+    const token = await this.auth0?.getTokenSilently();
+    return token;
+  }
 }
 

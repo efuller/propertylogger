@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { JournalsPage } from './modules/jounals/journals.page';
+import { JournalsPage } from './pages/app/journals/journals.page.tsx';
 
 function App() {
   return (

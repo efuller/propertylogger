@@ -26,5 +26,9 @@ export class AuthController {
   async logout() {
     await this.authRepo.logout();
   }
+
+  async getToken() {
+    return await this.authRepo.getToken();
+  }
 }
 
