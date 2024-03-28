@@ -4,7 +4,7 @@ import { AuthRepo } from './auth.repo.ts';
 export class AuthPresenter {
   get viewModel() {
     return {
-      isAuthenticated: this.authRepo.isAuthenticated,
+      isAuthenticated: this.authRepo.authenticated,
     };
   }
 

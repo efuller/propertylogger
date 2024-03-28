@@ -6,8 +6,9 @@ import { JournalRepo } from './modules/jounals/journal.repo.ts';
 import { JournalPresenter } from './modules/jounals/journal.presenter.ts';
 import { ApiClient } from './shared/apiClient/apiClient.ts';
 import { JournalController } from './modules/jounals/journal.controller.ts';
+import { MockAuthClient } from './modules/auth/AuthClient.ts';
 
-class CompositionRoot {
+export class CompositionRoot {
   router: AppRouter;
   private readonly authPresenter: AuthPresenter;
   private readonly authController: AuthController;
@@ -19,7 +20,7 @@ class CompositionRoot {
 
 
   constructor() {
-    this.authRepo = new AuthRepo();
+    this.authRepo = new AuthRepo(new MockAuthClient());
     this.authController = new AuthController(this.authRepo);
     this.authPresenter = new AuthPresenter(this.authRepo);
     this.apiClient = new ApiClient(
@@ -49,6 +50,10 @@ class CompositionRoot {
       presenter: this.journalPresenter,
       controller: this.journalController,
     }
+  }
+
+  setAsLoggedIn() {
+    this.authRepo.authenticated = true;
   }
 }
 
