@@ -20,6 +20,8 @@ export class CompositionRoot {
   private apiClient: ApiClient | undefined;
   private authClient: AuthClient | Auth0Client | undefined;
 
+  constructor(private context: 'test' | 'production' = 'production') {}
+
   async create() {
     const result = await createAuth0Client({
       domain: process.env.AUTH0_DOMAIN || '',
@@ -33,6 +35,7 @@ export class CompositionRoot {
     })
     // .then((authClient) => {
       this.authClient = new Auth0Adapter(result);
+    console.log('authClient', this.authClient);
       this.authRepo = new AuthRepo(this.authClient);
       this.authController = new AuthController(this.authRepo);
       this.authPresenter = new AuthPresenter(this.authRepo);
