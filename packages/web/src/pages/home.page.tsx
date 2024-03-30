@@ -4,6 +4,9 @@ export const HomePage = () => {
   const { controller } = compositionRoot.getAuthModule();
 
   const handleLogin = async () => {
+    if (!controller) {
+      throw new Error('Controller not set up');
+    }
     await controller.login();
   }
 

@@ -1,5 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 import { AuthClient } from './AuthClient.ts';
+import { Auth0Client } from '@auth0/auth0-spa-js';
 
 export class AuthRepo {
   public authClient: AuthClient | null;
@@ -26,7 +27,7 @@ export class AuthRepo {
   }
 
   public async login() {
-    await this.authClient?.loginWithRedirect();
+    await this.authClient?.login();
   }
 
   public async logout() {
@@ -60,7 +61,7 @@ export class AuthRepo {
   }
 
   public async getToken() {
-    const token = await this.authClient?.getTokenSilently();
+    const token = await this.authClient?.getToken();
     return token;
   }
 }

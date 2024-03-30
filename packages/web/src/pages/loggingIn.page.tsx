@@ -8,6 +8,9 @@ export const LoggingInPage = () => {
 
   useEffect(() => {
     async function check() {
+      if (!controller) {
+        throw new Error('Controller not set up');
+      }
       const isAuthenticated = await controller.isAuthenticated();
       if (isAuthenticated) {
         navigate('/app/dashboard');

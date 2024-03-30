@@ -20,8 +20,8 @@ export class AppRouter {
   constructor(
     private authController: AuthController,
     private journalModule: {
-      presenter: JournalPresenter;
-      controller: JournalController;
+      presenter: JournalPresenter | undefined;
+      controller: JournalController | undefined;
     }
   ) {}
 
@@ -40,6 +40,9 @@ export class AppRouter {
   }
 
   getRouteMap(): RouteObject[] {
+    if (!this.journalModule.presenter || !this.journalModule.controller) {
+      throw new Error('Journal controller is not initialized');
+    }
     return [
       {
         path: '/logging-in',

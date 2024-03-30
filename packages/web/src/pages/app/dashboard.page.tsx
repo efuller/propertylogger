@@ -6,20 +6,32 @@ export const DashboardPage = () => {
   const { controller, presenter } = compositionRoot.getAuthModule();
 
   const handleLogin = async () => {
+    if (!controller) {
+      throw new Error('Controller not set up');
+    }
     await controller.login();
   }
 
   const handleLogOut = async () => {
+    if (!controller) {
+      throw new Error('Controller not set up');
+    }
     await controller.logout();
     navigate('/');
   }
 
   const handleAmIAuthenticated = async () => {
+    if (!controller) {
+      throw new Error('Controller not set up');
+    }
     const result = await controller.isAuthenticated();
     console.log('authenticated', result);
   }
 
   // TODO: This needs to be async
+  if (!presenter) {
+    throw new Error('Presenter not set up');
+  }
   if (!presenter.viewModel.isAuthenticated) {
     return (
       <div>
