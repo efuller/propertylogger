@@ -4,7 +4,7 @@ export class AuthController {
   constructor(private authRepo: AuthRepo) {}
 
   authInitialized() {
-    return !!this.authRepo.auth0;
+    return !!this.authRepo.authClient
   }
 
   handleRedirectCallback() {
