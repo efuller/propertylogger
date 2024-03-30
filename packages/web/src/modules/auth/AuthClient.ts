@@ -1,6 +1,5 @@
 import { Auth0Client } from '@auth0/auth0-spa-js';
 export interface AuthClient {
-  initializeClient(): Promise<void>;
   login(): Promise<void>;
   logout(): Promise<void>;
   handleRedirectCallback(): Promise<void>;
@@ -12,10 +11,6 @@ export interface AuthClient {
 export class Auth0Adapter implements AuthClient {
   constructor(private auth0Client: Auth0Client) {
     this.auth0Client = auth0Client;
-  }
-
-  public async initializeClient(): Promise<void> {
-    return;
   }
 
   public async login(): Promise<void> {
@@ -43,11 +38,7 @@ export class Auth0Adapter implements AuthClient {
   }
 }
 
-export class MockAuthClient implements AuthClient {
-  public async initializeClient(): Promise<void> {
-    return;
-  }
-
+export class MockAuth0Adapter implements AuthClient {
   public async login(): Promise<void> {
     return;
   }
