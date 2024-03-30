@@ -15,7 +15,10 @@ export class JournalPresenter {
   }
 
   async getJournals() {
-    const journals = await this.journalRepo.getJournals();
-    return journals;
+    await this.journalRepo.getJournals();
+  }
+
+  async load() {
+    await this.getJournals();
   }
 }

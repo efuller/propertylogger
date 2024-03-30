@@ -1,7 +1,11 @@
-import { MockAuthClient } from './modules/auth/AuthClient.ts';
-
-const authClient = new MockAuthClient();
-const mockAuthClient = jest.fn().mockResolvedValue(authClient);
+const mockAuthClient = jest.fn(() => ({
+  loginWithRedirect: jest.fn(),
+  handleRedirectCallback: jest.fn(),
+  isAuthenticated: jest.fn(),
+  getTokenSilently: jest.fn(),
+  logout: jest.fn(),
+  checkSession: jest.fn(),
+}));
 
 jest.mock('@auth0/auth0-spa-js', () => ({
   createAuth0Client: jest.fn().mockResolvedValue(mockAuthClient),
