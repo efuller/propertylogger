@@ -8,7 +8,7 @@ interface Options<T = NonNullable<unknown>> {
 
 export interface ApiClient {
   get<T>(path: string, options: Options): Promise<ApiResponse<T>>;
-  post<T>(path: string, options: Options<T>): Promise<T>;
+  post<T>(path: string, options: Options<T>): Promise<ApiResponse<T>>;
 }
 
 export class FetchApiClient {
@@ -35,7 +35,7 @@ export class FetchApiClient {
     return response.json();
   }
 
-  public async post<T>(path: string, options: Options<T>): Promise<T> {
+  public async post<T>(path: string, options: Options<T>): Promise<ApiResponse<T>> {
     const token = await this.authController.getToken();
     const response = await fetch(`${this.baseUrl}${path}`, {
       method: 'POST',
@@ -72,13 +72,18 @@ export class MockApiClient implements MockApi {
     return this;
   }
 
+  public setPostResponse<T>(response: ApiResponse<T>) {
+    this.getResponse = response;
+    return this;
+  }
+
   public async get<T>(path: string, options: Options): Promise<ApiResponse<T>> {
     console.log('get', path, options);
     return this.getResponse as ApiResponse<T>;
   }
 
-  public async post<T>(path: string, options: Options<T>): Promise<T> {
-    console.log('get', path, options);
-    return options.data as T;
+  public async post<T>(path: string, options: Options<T>): Promise<ApiResponse<T>> {
+    console.log('post', path, options);
+    return this.getResponse as ApiResponse<T>;
   }
 }
