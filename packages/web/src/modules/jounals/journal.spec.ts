@@ -1,3 +1,5 @@
+import { MockApi, MockApiClient } from '../../shared/apiClient/apiClient.ts';
+
 const mockAuthClient = jest.fn(() => ({
   loginWithRedirect: jest.fn(),
   handleRedirectCallback: jest.fn(),
@@ -19,13 +21,29 @@ describe('Journal', () => {
   let compositionRoot: CompositionRoot;
 
   beforeEach(async () => {
-    compositionRoot = new CompositionRoot();
+    compositionRoot = new CompositionRoot('test');
     await compositionRoot.create();
   });
 
   it('should load journals', async () => {
     const { presenter } = compositionRoot.getJournalModule();
-
+    const apiClient = compositionRoot.getApiClient() as MockApiClient;
+    apiClient.setGetResponse({
+      success: true,
+      error: false,
+      data: [
+        {
+          id: '1',
+          title: 'Journal 1',
+          content: 'Journal 1 content',
+        },
+        {
+          id: '2',
+          title: 'Journal 2',
+          content: 'Journal 2 content',
+        },
+      ],
+    });
     if (!presenter) {
       throw new Error('Journal presenter not set up');
     }
@@ -34,6 +52,6 @@ describe('Journal', () => {
     await presenter.load();
 
     // Assert
-    expect(presenter.viewModel.journals.length).toBe(0);
+    expect(presenter.viewModel.journals.length).toBe(2);
   });
 });

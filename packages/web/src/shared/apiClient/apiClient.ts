@@ -6,7 +6,12 @@ interface Options<T = NonNullable<unknown>> {
   data?: T
 }
 
-export class ApiClient {
+export interface ApiClient {
+  get<T>(path: string, options: Options): Promise<ApiResponse<T>>;
+  post<T>(path: string, options: Options<T>): Promise<T>;
+}
+
+export class FetchApiClient {
   constructor(
     private readonly baseUrl: string,
     private readonly authController: AuthController
@@ -47,5 +52,33 @@ export class ApiClient {
     }
 
     return response.json();
+  }
+}
+
+export interface MockApi extends ApiClient {
+  setGetResponse<T>(response: ApiResponse<T>): MockApi;
+}
+
+export class MockApiClient implements MockApi {
+  private getResponse: ApiResponse<unknown> | undefined;
+
+  constructor(
+    private readonly baseUrl: string,
+    private readonly authController: AuthController
+  ) {}
+
+  public setGetResponse<T>(response: ApiResponse<T>) {
+    this.getResponse = response;
+    return this;
+  }
+
+  public async get<T>(path: string, options: Options): Promise<ApiResponse<T>> {
+    console.log('get', path, options);
+    return this.getResponse as ApiResponse<T>;
+  }
+
+  public async post<T>(path: string, options: Options<T>): Promise<T> {
+    console.log('get', path, options);
+    return options.data as T;
   }
 }

@@ -32,3 +32,7 @@ export class AuthController {
   }
 }
 
+export const MockAuthController = {
+  getToken: () => 'mock-token',
+}
+

@@ -4,7 +4,7 @@ import { AuthController } from './modules/auth/auth.controller.ts';
 import { AppRouter } from './shared/router';
 import { JournalRepo } from './modules/jounals/journal.repo.ts';
 import { JournalPresenter } from './modules/jounals/journal.presenter.ts';
-import { ApiClient } from './shared/apiClient/apiClient.ts';
+import { ApiClient, FetchApiClient, MockApi, MockApiClient } from './shared/apiClient/apiClient.ts';
 import { JournalController } from './modules/jounals/journal.controller.ts';
 import { Auth0Adapter, AuthClient } from './modules/auth/AuthClient.ts';
 import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
@@ -17,7 +17,7 @@ export class CompositionRoot {
   private journalRepo: JournalRepo | undefined;
   private journalPresenter: JournalPresenter | undefined;
   private journalController: JournalController | undefined;
-  private apiClient: ApiClient | undefined;
+  private apiClient: ApiClient | MockApi | undefined;
   private authClient: AuthClient | Auth0Client | undefined;
 
   constructor(private context: 'test' | 'production' = 'production') {}
@@ -33,23 +33,31 @@ export class CompositionRoot {
       },
       cacheLocation: 'localstorage',
     })
-    // .then((authClient) => {
-      this.authClient = new Auth0Adapter(result);
-    console.log('authClient', this.authClient);
-      this.authRepo = new AuthRepo(this.authClient);
+
+    this.authClient = new Auth0Adapter(result);
+    this.authRepo = new AuthRepo(this.authClient);
+    this.authController = new AuthController(this.authRepo);
+    this.authPresenter = new AuthPresenter(this.authRepo);
+
+    if (this.context !== 'test') {
       this.authController = new AuthController(this.authRepo);
-      this.authPresenter = new AuthPresenter(this.authRepo);
-      this.apiClient = new ApiClient(
+      this.apiClient = new FetchApiClient(
         'http://localhost:3000',
         this.authController
       );
+    } else {
+      this.authController = new AuthController(this.authRepo);
+      this.apiClient = new MockApiClient(
+        'http://localhost:3000',
+        this.authController
+      );
+    }
 
-      this.journalRepo = new JournalRepo(this.apiClient);
-      this.journalController = new JournalController(this.journalRepo);
-      this.journalPresenter = new JournalPresenter(this.journalRepo);
-      this.router = new AppRouter(this.authController, this.getJournalModule());
-      return true;
-    // });
+    this.journalRepo = new JournalRepo(this.apiClient);
+    this.journalController = new JournalController(this.journalRepo);
+    this.journalPresenter = new JournalPresenter(this.journalRepo);
+    this.router = new AppRouter(this.authController, this.getJournalModule());
+    return true;
   }
 
   getRouter(): AppRouter {
@@ -79,6 +87,14 @@ export class CompositionRoot {
     }
     this.authRepo.authenticated = true;
   }
+
+  getApiClient(): ApiClient | MockApi {
+    if (!this.apiClient) {
+      throw new Error('Api client not set up');
+    }
+
+    return this.apiClient;
+  }
 }
 
 const compositionRoot: CompositionRoot = new CompositionRoot();
@@ -87,8 +103,5 @@ async function createCompositionRoot() {
   const result = await compositionRoot.create();
   return result;
 }
-// !async function(){
-//   await compositionRoot.create();
-// }();
 
 export { compositionRoot, createCompositionRoot };
