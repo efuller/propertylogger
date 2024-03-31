@@ -1,6 +1,6 @@
 import { Journal } from './journal.model.ts';
 import { ApiClient } from '../../shared/apiClient/apiClient.ts';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 export class JournalRepo {
   public journals: Journal[] = [];
@@ -9,17 +9,30 @@ export class JournalRepo {
     makeObservable(this, {
       journals: observable,
       getJournals: action,
-    })
+      createJournal: action,
+    });
   }
 
   async createJournal(journal: Journal) {
-    await this.apiClient.post('/journal', {
+    const result = await this.apiClient.post('/journal', {
       data: journal
+    });
+
+    runInAction(() => {
+      this.journals.push({
+        title: result.data.title,
+        content: result.data.content,
+      });
     });
   }
 
   async getJournals() {
     const response = await this.apiClient.get<Journal[]>('/journal', {} );
-    this.journals = response.data;
+    runInAction(() => {
+      this.journals = [
+        ...this.journals,
+        ...response.data
+      ];
+    })
   }
 }
