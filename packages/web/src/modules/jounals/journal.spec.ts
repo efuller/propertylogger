@@ -44,14 +44,9 @@ describe('Journal', () => {
         },
       ],
     });
-    if (!presenter) {
-      throw new Error('Journal presenter not set up');
-    }
 
-    // Act
     await presenter.load();
 
-    // Assert
     expect(presenter.viewModel.journals.length).toBe(2);
   });
 
@@ -68,19 +63,13 @@ describe('Journal', () => {
       },
     });
 
-    if (!presenter || !controller) {
-      throw new Error('Journal presenter / controller not set up');
-    }
-
     expect(presenter.viewModel.journals.length).toBe(0);
 
-    // Act
     await controller.createJournal({
       title: 'Journal 3',
       content: 'Journal 3 content',
     });
 
-    // Assert
     expect(presenter.viewModel.journals.length).toBe(1);
   });
 });

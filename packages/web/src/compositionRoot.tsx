@@ -11,14 +11,14 @@ import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
-  private authPresenter: AuthPresenter | undefined;
-  private authController: AuthController | undefined;
-  private authRepo: AuthRepo | undefined;
-  private journalRepo: JournalRepo | undefined;
-  private journalPresenter: JournalPresenter | undefined;
-  private journalController: JournalController | undefined;
-  private apiClient: ApiClient | MockApi | undefined;
-  private authClient: AuthClient | Auth0Client | undefined;
+  private authPresenter!: AuthPresenter;
+  private authController!: AuthController;
+  private authRepo!: AuthRepo;
+  private journalRepo!: JournalRepo;
+  private journalPresenter!: JournalPresenter;
+  private journalController!: JournalController;
+  private apiClient!: ApiClient | MockApi;
+  private authClient!: AuthClient | Auth0Client;
 
   constructor(private context: 'test' | 'production' = 'production') {}
 

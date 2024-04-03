@@ -26,10 +26,6 @@ describe('App', () => {
       const authModule = compositionRoot.getAuthModule();
       const { presenter } = authModule;
 
-      if (!presenter) {
-        throw new Error('Presenter not set up');
-      }
-
       await presenter.load();
       expect(presenter.viewModel.isAuthenticated).toBe(false);
     });
@@ -40,9 +36,6 @@ describe('App', () => {
       const authModule = compositionRoot.getAuthModule();
       const { presenter } = authModule;
 
-      if (!presenter) {
-        throw new Error('Presenter not set up');
-      }
       await presenter.load();
       expect(presenter.viewModel.isAuthenticated).toBe(true);
     });

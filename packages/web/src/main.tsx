@@ -12,7 +12,7 @@ if (!domain || !clientId || !audience) {
   throw new Error('Missing Auth0 configuration');
 }
 
-const result = await createCompositionRoot();
+await createCompositionRoot();
 const router = compositionRoot.getRouter();
 const routeMap = router.getRouteMap();
 const browserRouter = createBrowserRouter(routeMap);
