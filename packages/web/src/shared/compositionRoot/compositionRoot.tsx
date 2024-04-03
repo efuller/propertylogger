@@ -1,12 +1,12 @@
-import { AuthRepo } from './modules/auth/auth.repo.ts';
-import { AuthPresenter } from './modules/auth/auth.presenter.ts';
-import { AuthController } from './modules/auth/auth.controller.ts';
-import { AppRouter } from './shared/router';
-import { JournalRepo } from './modules/jounals/journal.repo.ts';
-import { JournalPresenter } from './modules/jounals/journal.presenter.ts';
-import { ApiClient, FetchApiClient, MockApi, MockApiClient } from './shared/apiClient/apiClient.ts';
-import { JournalController } from './modules/jounals/journal.controller.ts';
-import { Auth0Adapter, AuthClient } from './modules/auth/AuthClient.ts';
+import { AuthRepo } from '../../modules/auth/auth.repo.ts';
+import { AuthPresenter } from '../../modules/auth/auth.presenter.ts';
+import { AuthController } from '../../modules/auth/auth.controller.ts';
+import { AppRouter } from '../router';
+import { JournalRepo } from '../../modules/jounals/journal.repo.ts';
+import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
+import { ApiClient, FetchApiClient, MockApi, MockApiClient } from '../apiClient/apiClient.ts';
+import { JournalController } from '../../modules/jounals/journal.controller.ts';
+import { Auth0Adapter, AuthClient } from '../../modules/auth/AuthClient.ts';
 import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
 
 export class CompositionRoot {

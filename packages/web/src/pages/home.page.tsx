@@ -1,4 +1,4 @@
-import { compositionRoot } from '../compositionRoot.tsx';
+import { compositionRoot } from '../shared/compositionRoot/compositionRoot.tsx';
 
 export const HomePage = () => {
   const { controller } = compositionRoot.getAuthModule();

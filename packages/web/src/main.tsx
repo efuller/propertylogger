@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import { compositionRoot, createCompositionRoot } from './compositionRoot.tsx';
+import { compositionRoot, createCompositionRoot } from './shared/compositionRoot/compositionRoot.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './index.css';
 
 const domain = process.env.AUTH0_DOMAIN;
 const clientId = process.env.AUTH0_CLIENT_ID;

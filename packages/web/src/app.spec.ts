@@ -11,7 +11,7 @@ jest.mock('@auth0/auth0-spa-js', () => ({
   createAuth0Client: jest.fn().mockResolvedValue(mockAuthClient),
 }));
 
-import { CompositionRoot } from './compositionRoot.tsx';
+import { CompositionRoot } from './shared/compositionRoot/compositionRoot.tsx';
 
 describe('App', () => {
   let compositionRoot: CompositionRoot;

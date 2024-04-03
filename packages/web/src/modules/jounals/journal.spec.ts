@@ -15,7 +15,7 @@ jest.mock('@auth0/auth0-spa-js', () => ({
   })),
 }));
 
-import { CompositionRoot } from '../../compositionRoot.tsx';
+import { CompositionRoot } from '../../shared/compositionRoot/compositionRoot.tsx';
 
 describe('Journal', () => {
   let compositionRoot: CompositionRoot;

@@ -1,4 +1,4 @@
-import { compositionRoot } from '../../compositionRoot.tsx';
+import { compositionRoot } from '../../shared/compositionRoot/compositionRoot.tsx';
 import { useNavigate } from 'react-router-dom';
 
 export const DashboardPage = () => {
