@@ -34,7 +34,7 @@ export const generatePrismaClient = async (
   console.log('-----------------------------------');
 
   const resetOut = await execSh.promise(
-    `dotenv -e ${envPath} -- prisma db push --force-reset --schema=${schemaPath}`,
+    `dotenv -e ${envPath} -- prisma db push --schema=${schemaPath}`,
     true,
   );
   console.log(resetOut.stdout, resetOut.stderr);
