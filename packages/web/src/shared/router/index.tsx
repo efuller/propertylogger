@@ -7,6 +7,7 @@ import { AuthController } from '../../modules/auth/auth.controller.ts';
 import { JournalsPage } from '../../pages/app/journals/journals.page.tsx';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
 import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
+import { NotFoundPage } from '../../pages/404/404.page.tsx';
 
 const CODE_RE = /[?&]code=[^&]+/;
 const STATE_RE = /[?&]state=[^&]+/;
@@ -85,6 +86,10 @@ export class AppRouter {
             element: <JournalsPage presenter={this.journalModule.presenter} controller={this.journalModule.controller} />,
           },
         ]
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       }
     ];
   }
