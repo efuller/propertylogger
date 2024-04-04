@@ -1,4 +1,4 @@
-import { MockApiClient } from '../../shared/apiClient/apiClient.ts';
+import { MockApiClient } from '../../shared/apiClient/mockApiClient.ts';
 
 const mockAuthClient = jest.fn(() => ({
   loginWithRedirect: jest.fn(),

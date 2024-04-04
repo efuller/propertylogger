@@ -4,11 +4,13 @@ import { AuthController } from '../../modules/auth/auth.controller.ts';
 import { AppRouter } from '../router';
 import { JournalRepo } from '../../modules/jounals/journal.repo.ts';
 import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
-import { ApiClient, FetchApiClient, MockApi, MockApiClient } from '../apiClient/apiClient.ts';
+import { ApiClient, MockApi } from '../apiClient/apiClient.ts';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
 import { AuthClient } from '../../modules/auth/authClient.ts';
 import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
 import { Auth0Adapter } from '../auth/auth0Adapter.ts';
+import { FetchApiClient } from '../apiClient/fetchApiClient.ts';
+import { MockApiClient } from '../apiClient/mockApiClient.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
