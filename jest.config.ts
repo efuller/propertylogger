@@ -11,6 +11,7 @@ export default async (): Promise<Config> => ({
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
       },
+      rootDir: '<rootDir>/packages/api'
     },
     {
       displayName: 'api-e2e',
@@ -52,6 +53,16 @@ export default async (): Promise<Config> => ({
       displayName: 'web-e2e',
       preset: "jest-puppeteer",
       testMatch: ['**/@(src|tests)/**/*.@(e2e).@(ts|tsx)'],
+      transform: {
+        '^.+\\.tsx?$': ['ts-jest', {}],
+      },
+      rootDir: '<rootDir>/packages/web'
+    },
+    {
+      displayName: 'web',
+      preset: "ts-jest",
+      testEnvironment: "jsdom",
+      testMatch: ['**/@(src|tests)/**/*.@(spec|test).@(ts|tsx)'],
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
       },
