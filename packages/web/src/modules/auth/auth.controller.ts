@@ -3,10 +3,6 @@ import { AuthRepo } from './auth.repo.ts';
 export class AuthController {
   constructor(private authRepo: AuthRepo) {}
 
-  authInitialized() {
-    return !!this.authRepo.authClient
-  }
-
   handleRedirectCallback() {
     return this.authRepo.handleRedirectCallback();
   }
