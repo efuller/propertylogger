@@ -26,7 +26,6 @@ describe('App', () => {
       const authModule = compositionRoot.getAuthModule();
       const { presenter } = authModule;
 
-      await presenter.load();
       expect(presenter.viewModel.isAuthenticated).toBe(false);
     });
 
@@ -36,7 +35,6 @@ describe('App', () => {
       const authModule = compositionRoot.getAuthModule();
       const { presenter } = authModule;
 
-      await presenter.load();
       expect(presenter.viewModel.isAuthenticated).toBe(true);
     });
   });

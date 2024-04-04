@@ -27,8 +27,3 @@ export class AuthController {
     return await this.authRepo.getToken();
   }
 }
-
-export const MockAuthController = {
-  getToken: () => 'mock-token',
-}
-

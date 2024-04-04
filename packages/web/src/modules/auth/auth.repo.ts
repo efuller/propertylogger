@@ -47,8 +47,7 @@ export class AuthRepo {
   }
 
   public async getToken() {
-    const token = await this.authClient?.getToken();
-    return token;
+    return this.authClient?.getToken();
   }
 }
 

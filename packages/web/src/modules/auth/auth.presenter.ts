@@ -15,7 +15,5 @@ export class AuthPresenter {
       viewModel: computed,
     });
   }
-
-  async load() {}
 }
 
