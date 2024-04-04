@@ -11,6 +11,9 @@ export default defineConfig(({ mode }) => {
       'process.env.AUTH0_AUDIENCE': JSON.stringify(env.AUTH0_AUDIENCE),
       'process.env.API_URL': JSON.stringify(env.API_URL),
     },
+    build: {
+      target: 'esnext',
+    },
     plugins: [react()],
   }
 })
