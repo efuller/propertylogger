@@ -1,5 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-import { AuthClient } from './AuthClient.ts';
+import { AuthClient } from './authClient.ts';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 
 export class AuthRepo {

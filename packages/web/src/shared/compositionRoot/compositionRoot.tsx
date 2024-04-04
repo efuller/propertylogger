@@ -6,7 +6,7 @@ import { JournalRepo } from '../../modules/jounals/journal.repo.ts';
 import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { ApiClient, FetchApiClient, MockApi, MockApiClient } from '../apiClient/apiClient.ts';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
-import { Auth0Adapter, AuthClient } from '../../modules/auth/AuthClient.ts';
+import { Auth0Adapter, AuthClient } from '../../modules/auth/authClient.ts';
 import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
 
 export class CompositionRoot {
