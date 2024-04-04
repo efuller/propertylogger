@@ -11,6 +11,7 @@ export default async (): Promise<Config> => ({
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
       },
+      rootDir: '<rootDir>/packages/api'
     },
     {
       displayName: 'api-e2e',
