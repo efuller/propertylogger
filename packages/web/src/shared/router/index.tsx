@@ -27,10 +27,6 @@ export class AppRouter {
   ) {}
 
   private async hasAccess() {
-    if (!this.authController.authInitialized()) {
-      await this.authController.initializeAuth();
-    }
-
     const isAuthenticated = await this.authController.isAuthenticated()
 
     if (!isAuthenticated) {
@@ -61,7 +57,7 @@ export class AppRouter {
         path: '/',
         element: <HomePage />,
         loader: async () => {
-          await this.authController.initializeAuth();
+          await this.authController.isAuthenticated();
           return null;
         }
       },

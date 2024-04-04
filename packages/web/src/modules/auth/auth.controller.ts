@@ -11,10 +11,6 @@ export class AuthController {
     return this.authRepo.handleRedirectCallback();
   }
 
-  async initializeAuth() {
-    await this.authRepo.initialize();
-  }
-
   async isAuthenticated() {
     return await this.authRepo.isAuthenticated();
   }

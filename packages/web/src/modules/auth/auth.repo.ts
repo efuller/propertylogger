@@ -1,6 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
 import { AuthClient } from './authClient.ts';
-import { Auth0Client } from '@auth0/auth0-spa-js';
 
 export class AuthRepo {
   public authClient: AuthClient | null;
@@ -32,19 +31,6 @@ export class AuthRepo {
 
   public async logout() {
     await this.authClient?.logout();
-  }
-
-  public async initialize() {
-    // this.authClient = await createAuth0Client({
-    //   domain,
-    //   clientId,
-    //   authorizationParams: {
-    //     redirect_uri: `${window.location.origin}/logging-in`,
-    //     audience,
-    //     scope: 'openid profile email',
-    //   },
-    //   cacheLocation: 'localstorage',
-    // });
   }
 
   public async handleRedirectCallback() {
