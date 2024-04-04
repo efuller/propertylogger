@@ -45,7 +45,7 @@ export class CompositionRoot {
     if (this.context !== 'test') {
       this.authController = new AuthController(this.authRepo);
       this.apiClient = new FetchApiClient(
-        'http://localhost:3000',
+        process.env.API_URL || 'http://localhost:3000',
         this.authController
       );
     } else {
