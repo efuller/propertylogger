@@ -26,14 +26,15 @@ export class AppRouter {
     }
   ) {}
 
-  private async hasAccess() {
+  private async protectedLoader() {
     const isAuthenticated = await this.authController.isAuthenticated()
 
     if (!isAuthenticated) {
-      return false;
+      // TODO: How to redirect back to the current page after login?
+      return redirect('/');
     }
 
-    return true;
+    return null;
   }
 
   getRouteMap(): RouteObject[] {
@@ -64,14 +65,7 @@ export class AppRouter {
       {
         path: 'app',
         element: <AppPage />,
-        loader: async () => {
-          const hasAccess = await this.hasAccess();
-
-          if (!hasAccess) {
-            return redirect('/');
-          }
-          return null;
-        },
+        loader: this.protectedLoader.bind(this),
         children: [
           {
             path: '/app/dashboard',
