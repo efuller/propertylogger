@@ -16,8 +16,8 @@ export class LoginForm extends BasePageComponent<LoginFormElements> {
   }
 
   async fillAndSubmitForm() {
-    await this.waitAndType('userName', 'test');
-    await this.waitAndType('password', 'password');
+    await this.waitAndType('userName', process.env.TEST_USER_EMAIL || '');
+    await this.waitAndType('password', process.env.TEST_USER_PASSWORD || '');
     await this.waitAndClick('submitBtn');
   }
 }
