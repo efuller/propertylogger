@@ -38,4 +38,8 @@ export class HomePage extends BasePage<HomepageComponents> {
   async waitForNavigation() {
     await this.pageDriver.page.waitForNavigation();
   }
+
+  getUrl() {
+    return this.pageDriver.page.url();
+  }
 }
