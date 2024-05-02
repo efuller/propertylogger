@@ -12,7 +12,7 @@ export const HomePage = () => {
       <div>New HomePage</div>
       <div>
         <h1>Welcome to PropertyLogger</h1>
-        <button onClick={handleLogin}>Login</button>
+        <button id="login" onClick={handleLogin}>Login</button>
       </div>
     </>
   );
