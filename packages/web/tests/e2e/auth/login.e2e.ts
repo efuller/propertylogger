@@ -36,7 +36,6 @@ defineFeature(feature, (test) => {
 
   test('A registered member can login and access their dashboard', ({ given, when, then}) => {
     given('I am on the homepage', async () => {
-      console.log('API URL:', process.env);
       await homePage.navigate();
     });
 
