@@ -1,11 +1,11 @@
 import { PuppeteerPageDriver } from '../webDriver/puppeteerPageDriver';
-import { JournalList } from '../pageComponents/journal/journalList';
-import { AddJournalFormComponent } from '../pageComponents/journal/addJournalForm';
 import { BasePage } from './basePage';
+import { LoginButton } from '../pageComponents/home/loginButton';
+import { LoginForm } from '../pageComponents/home/loginForm';
 
 type HomepageComponents = {
-  addJournalForm: AddJournalFormComponent;
-  journalList: JournalList;
+  loginButton: LoginButton;
+  loginForm: LoginForm;
 };
 
 export class HomePage extends BasePage<HomepageComponents> {
@@ -23,19 +23,23 @@ export class HomePage extends BasePage<HomepageComponents> {
   }
 
   async generatePageComponents() {
-    const addJournalForm = new AddJournalFormComponent(this.pageDriver, {
-      titleInput: { selector: '#title' },
-      contentInput: { selector: '#content' },
-      submitBtn: { selector: '#submit' },
+    const loginButton = new LoginButton(this.pageDriver, {
+      loginButton: { selector: '#login' },
+    });
+    const loginForm = new LoginForm(this.pageDriver, {
+      userName: { selector: '#username' },
+      password: { selector: '#password' },
+      submitBtn: { selector: '[data-action-button-primary]' },
     });
 
-    const journalList = new JournalList(this.pageDriver, {
-      journalList: { selector: '#journal-list' },
-      journalEntries: { selector: '.journal-entry' },
-      journalTitle: { selector: '.journal-title' },
-      journalContent: { selector: '.journal-content' },
-    });
+    return { loginButton, loginForm };
+  }
 
-    return { addJournalForm, journalList };
+  async waitForNavigation() {
+    await this.pageDriver.page.waitForNavigation();
+  }
+
+  getUrl() {
+    return this.pageDriver.page.url();
   }
 }
