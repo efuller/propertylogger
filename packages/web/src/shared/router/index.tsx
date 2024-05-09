@@ -43,7 +43,7 @@ export class AppRouter {
     }
     return [
       {
-        path: '/logging-in',
+        path: '/creating-account',
         element: <LoggingInPage />,
         loader: async () => {
           await this.authController.isAuthenticated();

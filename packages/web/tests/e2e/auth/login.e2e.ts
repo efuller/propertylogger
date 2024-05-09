@@ -23,7 +23,7 @@ defineFeature(feature, (test) => {
   let loginForm: LoginForm;
 
   beforeAll(async () => {
-    driver = await PuppeteerPageDriver.create({ headless: false, slowMo: 200 });
+    driver = await PuppeteerPageDriver.create({ headless: false, slowMo: 100 });
     webApp = await WebApp.create(driver);
     homePage = webApp.getPageObject('homePage');
     loginButton = homePage.$('loginButton');
@@ -34,20 +34,23 @@ defineFeature(feature, (test) => {
     await webApp.close();
   });
 
-  test('A registered member can login and access their dashboard', ({ given, when, then}) => {
-    given('I am on the homepage', async () => {
+  test('successful member creation', ({ given, when, then}) => {
+    given('I am a new user', async () => {
       await homePage.navigate();
-    });
 
-    when('I login', async () => {
       expect(await loginButton.isValid()).toBe(true);
       await loginButton.click();
       await homePage.waitForNavigation();
       await loginForm.fillAndSubmitForm();
     });
 
-    then('I am redirected to my dashboard', async () => {
+    when('I am created as a new member', async () => {
       await homePage.waitForNavigation();
+      expect(homePage.getUrl()).toContain('creating-account');
+    });
+
+    then('I am able to access the app', async () => {
+      // we can check for username in header for FE.
       await homePage.waitForNavigation();
       expect(homePage.getUrl()).toContain('dashboard');
     });
