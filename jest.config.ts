@@ -66,6 +66,9 @@ export default async (): Promise<Config> => ({
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
       },
+      moduleNameMapper: {
+        '^jose$': __dirname + '/node_modules/jose/dist/node/cjs',
+      },
       rootDir: '<rootDir>/packages/web'
     },
   ]

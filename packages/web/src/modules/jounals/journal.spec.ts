@@ -15,6 +15,10 @@ jest.mock('@auth0/auth0-spa-js', () => ({
   })),
 }));
 
+jest.mock('jose', () => ({
+  TextEncoder: jest.fn(),
+}));
+
 import { CompositionRoot } from '../../shared/compositionRoot/compositionRoot.tsx';
 
 describe('Journal', () => {
