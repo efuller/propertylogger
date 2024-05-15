@@ -47,6 +47,8 @@ defineFeature(feature, (test) => {
     when('I am created as a new member', async () => {
       await homePage.waitForNavigation();
       expect(homePage.getUrl()).toContain('creating-account');
+      await homePage.waitForNavigation();
+      expect(homePage.getUrl()).toContain('logging-in');
     });
 
     then('I am able to access the app', async () => {
