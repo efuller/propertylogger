@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
       'process.env.AUTH0_CLIENT_ID': JSON.stringify(env.AUTH0_CLIENT_ID),
       'process.env.AUTH0_AUDIENCE': JSON.stringify(env.AUTH0_AUDIENCE),
       'process.env.API_URL': JSON.stringify(env.API_URL),
+      'process.env.APP_SECRET_KEY': JSON.stringify(env.APP_SECRET_KEY),
     },
     build: {
       target: 'esnext',
