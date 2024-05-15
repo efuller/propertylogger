@@ -12,7 +12,7 @@ import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { NotFoundPage } from '../../pages/404/404.page.tsx';
 import { CreatingAccountPage } from '../../pages/creatingAccount.page.tsx';
 
-interface JWTPayload {
+export interface CustomJWTPayload {
   data: {
     user: {
       user_id: string;
@@ -65,7 +65,6 @@ export class AppRouter {
             throw new Error('APP_SECRET_KEY is not set');
           }
 
-          console.log('ITEM', item);
           const url = new URL(item.request.url);
           const token = url.searchParams.get('session_token');
           const state = url.searchParams.get('state');
@@ -75,8 +74,7 @@ export class AppRouter {
           }
 
           const secret = new TextEncoder().encode(process.env.APP_SECRET_KEY);
-          const decoded: jose.JWTVerifyResult<JWTPayload> = await jose.jwtVerify(token, secret);
-          console.log('DECODED', decoded);
+          const decoded: jose.JWTVerifyResult<CustomJWTPayload> = await jose.jwtVerify(token, secret);
 
           const created = { state, memberCreate: true };
           const alg = 'HS256'
