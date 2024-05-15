@@ -78,7 +78,7 @@ export class AppRouter {
 
           const created = { state, memberCreate: true };
           const alg = 'HS256'
-          const jwt = await new  jose.SignJWT(created)
+          const jwt = await new jose.SignJWT(created)
             .setIssuedAt()
             .setSubject(decoded.payload.data.user.user_id)
             .setProtectedHeader({ alg, typ: 'JWT' })
