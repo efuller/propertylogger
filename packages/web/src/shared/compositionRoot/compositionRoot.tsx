@@ -30,7 +30,7 @@ export class CompositionRoot {
       domain: process.env.AUTH0_DOMAIN || '',
       clientId: process.env.AUTH0_CLIENT_ID || '',
       authorizationParams: {
-        redirect_uri: `${window.location.origin}/creating-account`,
+        redirect_uri: `${window.location.origin}/logging-in`,
         audience: process.env.AUTH0_AUDIENCE || '',
         scope: 'openid profile email',
       },
