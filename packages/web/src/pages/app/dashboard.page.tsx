@@ -1,5 +1,5 @@
 import { compositionRoot } from '../../shared/compositionRoot/compositionRoot.tsx';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -36,6 +36,7 @@ export const DashboardPage = () => {
         <h1>Welcome to PropertyLogger</h1>
         <button onClick={handleLogOut}>logout</button>
         <button onClick={handleAmIAuthenticated}>authed</button>
+        <Link to='/app/journals'>Journals</Link>
       </div>
     </>
   );
