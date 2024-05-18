@@ -27,6 +27,8 @@
     "web:build": "npm run build -w packages/web",
     "web:test": "jest --selectProjects web -c jest.config.ts",
     "web:test:watch": "jest --selectProjects web -c jest.config.ts --watchAll",
+    "web:test:infra": "jest --selectProjects web-infra -c jest.config.ts",
+    "web:test:infra:watch": "jest --selectProjects web-infra -c jest.config.ts --watchAll",
     "web:test:e2e": "jest --selectProjects web-e2e -c jest.config.ts",
     "web:test:e2e:watch": "jest --selectProjects web-e2e -c jest.config.ts --watchAll"
   },

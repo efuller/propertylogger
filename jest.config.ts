@@ -59,6 +59,17 @@ export default async (): Promise<Config> => ({
       rootDir: '<rootDir>/packages/web'
     },
     {
+      displayName: 'web-infra',
+      testMatch: ['**/@(src|tests)/**/*.@(infra).@(ts|tsx)'],
+      transform: {
+        '^.+\\.tsx?$': ['ts-jest', {}],
+      },
+      moduleNameMapper: {
+        '^jose$': __dirname + '/node_modules/jose/dist/node/cjs',
+      },
+      rootDir: '<rootDir>/packages/web',
+    },
+    {
       displayName: 'web',
       preset: "ts-jest",
       testEnvironment: "jsdom",
