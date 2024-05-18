@@ -1,5 +1,4 @@
 import { redirect, RouteObject } from 'react-router-dom';
-import * as jose from 'jose';
 
 import { HomePage } from '../../pages/home.page.tsx';
 import { LoggingInPage } from '../../pages/loggingIn.page.tsx';
@@ -54,42 +53,14 @@ export class AppRouter {
     }
     return [
       {
-        path: '/creating-account',
+        path: '/account',
         element: <CreatingAccountPage />,
-        loader: async (item) => {
-          if (!process.env.AUTH0_DOMAIN) {
-            throw new Error('AUTH0_DOMAIN is not set');
-          }
-
-          if (!process.env.APP_SECRET_KEY) {
-            throw new Error('APP_SECRET_KEY is not set');
-          }
-
-          const url = new URL(item.request.url);
-          const token = url.searchParams.get('session_token');
-          const state = url.searchParams.get('state');
-
-          if (!token) {
-            return redirect('/');
-          }
-
-          const secret = new TextEncoder().encode(process.env.APP_SECRET_KEY);
-          const decoded: jose.JWTVerifyResult<CustomJWTPayload> = await jose.jwtVerify(token, secret);
-
-          const created = { state, memberCreate: true };
-          const alg = 'HS256'
-          const jwt = await new jose.SignJWT(created)
-            .setIssuedAt()
-            .setSubject(decoded.payload.data.user.user_id)
-            .setProtectedHeader({ alg, typ: 'JWT' })
-            .setIssuer(process.env.AUTH0_DOMAIN)
-            .setExpirationTime('2h')
-            .sign(secret);
-
-          const continueUri = `${decoded.payload.continue_uri}?state=${state}&session_token=${jwt}`;
-
-          return redirect(continueUri);
-        }
+        children: [
+          {
+            path: 'creating-account',
+            element: <CreatingAccountPage />,
+          },
+        ]
       },
       {
         path: '/logging-in',
