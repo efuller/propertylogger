@@ -66,11 +66,14 @@ export class AppRouter {
         path: '/logging-in',
         element: <LoggingInPage />,
         loader: async () => {
-          await this.authController.isAuthenticated();
+          const hasParams = hasAuthParams();
 
-          if (hasAuthParams()) {
-              await this.authController.handleRedirectCallback();
+          if (!hasParams) {
+            return redirect('/');
           }
+
+          await this.authController.handleRedirectCallback();
+
           return redirect('/app/dashboard');
         }
       },
