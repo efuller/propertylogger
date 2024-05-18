@@ -1,18 +1,19 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import path from 'path';
 import dotenv from 'dotenv';
-import { PuppeteerPageDriver } from '../../shared/webDriver/puppeteerPageDriver';
-import { WebApp } from '../../shared/webApp/webApp';
-import { HomePage } from '../../shared/pages/homePage';
-import { LoginButton } from '../../shared/pageComponents/home/loginButton';
-import { LoginForm } from '../../shared/pageComponents/home/loginForm';
+import { PuppeteerPageDriver } from '../shared/webDriver/puppeteerPageDriver';
+import { WebApp } from '../shared/webApp/webApp';
+import { HomePage } from '../shared/pages/homePage';
+import { LoginButton } from '../shared/pageComponents/home/loginButton';
+import { LoginForm } from '../shared/pageComponents/home/loginForm';
+
 const feature = loadFeature(
-  path.join(__dirname, '../../../../../packages/shared/tests/auth/e2e/auth.feature'),
+  path.join(__dirname, '../../../../packages/shared/tests/auth/auth.feature'),
   { tagFilter: '@web' },
 );
 
 dotenv.config({
-  path: path.join(__dirname, '../../../../api/.env.test'),
+  path: path.join(__dirname, '../../../api/.env.test'),
 });
 
 defineFeature(feature, (test) => {
