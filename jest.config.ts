@@ -60,13 +60,19 @@ export default async (): Promise<Config> => ({
     },
     {
       displayName: 'web-infra',
+      preset: "ts-jest",
       testMatch: ['**/@(src|tests)/**/*.@(infra).@(ts|tsx)'],
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
       },
+      transformIgnorePatterns: [
+        __dirname + '/node_modules/(?!uuid).+\\.js$'
+      ],
       moduleNameMapper: {
         '^jose$': __dirname + '/node_modules/jose/dist/node/cjs',
+        "^uuid$": require.resolve('uuid')
       },
+      testEnvironment: "jsdom",
       rootDir: '<rootDir>/packages/web',
     },
     {
