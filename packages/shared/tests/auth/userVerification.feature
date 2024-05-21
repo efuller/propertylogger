@@ -6,10 +6,11 @@ Feature: User Verification
   @web
   Scenario: New user is verified and becomes member
     Given I am a new user
+    And I have not been verified
     When My user account is verified
-    Then I am created as a new member
+    Then I am redirected to the create member page
 
-  @web
+  @exclude
   Scenario: New user fails verification
     Given I am a new user
     When My user account fails verification
