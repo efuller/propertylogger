@@ -9,7 +9,8 @@ import { JournalsPage } from '../../pages/app/journals/journals.page.tsx';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
 import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { NotFoundPage } from '../../pages/404/404.page.tsx';
-import { CreatingAccountPage } from '../../pages/creatingAccount.page.tsx';
+import { VerifyingAccountPage } from '../../pages/verifyingAccount.page.tsx';
+import { VerificationController } from '../../modules/verification/application/verification.controller.ts';
 
 export interface CustomJWTPayload {
   data: {
@@ -33,7 +34,10 @@ export class AppRouter {
     private journalModule: {
       presenter: JournalPresenter | undefined;
       controller: JournalController | undefined;
-    }
+    },
+    private verificationModule: {
+      controller: VerificationController | undefined;
+    },
   ) {}
 
   private async protectedLoader() {
@@ -51,14 +55,19 @@ export class AppRouter {
     if (!this.journalModule.presenter || !this.journalModule.controller) {
       throw new Error('Journal controller is not initialized');
     }
+
+    if (!this.verificationModule.controller) {
+      throw new Error('Verification controller is not initialized');
+    }
+
     return [
       {
         path: '/account',
-        element: <CreatingAccountPage />,
+        element: <VerifyingAccountPage controller={this.verificationModule.controller} />,
         children: [
           {
             path: 'creating-account',
-            element: <CreatingAccountPage />,
+            element: <VerifyingAccountPage controller={this.verificationModule.controller} />,
           },
         ]
       },

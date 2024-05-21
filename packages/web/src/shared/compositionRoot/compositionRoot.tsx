@@ -11,6 +11,11 @@ import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
 import { Auth0Adapter } from '../auth/auth0Adapter.ts';
 import { FetchApiClient } from '../apiClient/fetchApiClient.ts';
 import { MockApiClient } from '../apiClient/mockApiClient.ts';
+import { VerificationPresenter } from '../../modules/verification/presentation/verification.presenter.ts';
+import { VerificationController } from '../../modules/verification/application/verification.controller.ts';
+import { Auth0VerificationService } from '../../modules/verification/infra/auth0Verification.service.ts';
+import { MockVerificationService } from '../../modules/verification/infra/mockVerification.service.ts';
+import { VerificationRepo } from '../../modules/verification/infra/verification.repo.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
@@ -22,6 +27,9 @@ export class CompositionRoot {
   private journalController!: JournalController;
   private apiClient!: ApiClient | MockApi;
   private authClient!: AuthClient | Auth0Client;
+  private verificationPresenter!: VerificationPresenter;
+  private verificationController!: VerificationController;
+  private verificationRepo!: VerificationRepo;
 
   constructor(private context: 'test' | 'production' = 'production') {}
 
@@ -41,6 +49,20 @@ export class CompositionRoot {
     this.authRepo = new AuthRepo(this.authClient);
     this.authController = new AuthController(this.authRepo);
     this.authPresenter = new AuthPresenter(this.authRepo);
+    this.verificationRepo = new VerificationRepo();
+    this.verificationPresenter = new VerificationPresenter(this.verificationRepo);
+
+    if (this.context !== 'test') {
+      this.verificationController = new VerificationController(
+        new Auth0VerificationService(),
+        this.verificationRepo
+      );
+    } else {
+      this.verificationController = new VerificationController(
+        new MockVerificationService(),
+        this.verificationRepo
+      );
+    }
 
     if (this.context !== 'test') {
       this.authController = new AuthController(this.authRepo);
@@ -59,7 +81,11 @@ export class CompositionRoot {
     this.journalRepo = new JournalRepo(this.apiClient);
     this.journalController = new JournalController(this.journalRepo);
     this.journalPresenter = new JournalPresenter(this.journalRepo);
-    this.router = new AppRouter(this.authController, this.getJournalModule());
+    this.router = new AppRouter(
+      this.authController,
+      this.getJournalModule(),
+      this.getVerificationModule()
+    );
     return true;
   }
 
@@ -81,6 +107,13 @@ export class CompositionRoot {
     return {
       presenter: this.journalPresenter,
       controller: this.journalController,
+    }
+  }
+
+  getVerificationModule() {
+    return {
+      presenter: this.verificationPresenter,
+      controller: this.verificationController,
     }
   }
 
