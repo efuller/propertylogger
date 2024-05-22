@@ -20,7 +20,6 @@ export class VerificationController {
 
   async execute(url: string): Promise<ControllerResult<VerificationData>> {
     const result = await this.verificationService.verifyUser(url);
-
     if (result.userId) {
       this.verificationRepository.update({ userId: result.userId, continueUri: result.continueUri});
       return {

@@ -12,4 +12,8 @@ export class MockVerificationService extends Spy implements VerificationService 
         this.addCall('verifyUser', {params: [url], calledBy: 'VerificationService'})
         return this.defaultResponse;
     }
+
+    setDefaultResponse(response: { userId: string; continueUri: string; }) {
+        this.defaultResponse = response;
+    }
 }

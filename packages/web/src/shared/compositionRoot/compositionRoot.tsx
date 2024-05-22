@@ -16,6 +16,7 @@ import { VerificationController } from '../../modules/verification/application/v
 import { Auth0VerificationService } from '../../modules/verification/infra/auth0Verification.service.ts';
 import { MockVerificationService } from '../../modules/verification/infra/mockVerification.service.ts';
 import { VerificationRepo } from '../../modules/verification/infra/verification.repo.ts';
+import { VerificationService } from '../../modules/verification/application/verificationService.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
@@ -30,6 +31,7 @@ export class CompositionRoot {
   private verificationPresenter!: VerificationPresenter;
   private verificationController!: VerificationController;
   private verificationRepo!: VerificationRepo;
+  private verificationService!: VerificationService;
 
   constructor(private context: 'test' | 'production' = 'production') {}
 
@@ -53,13 +55,15 @@ export class CompositionRoot {
     this.verificationPresenter = new VerificationPresenter(this.verificationRepo);
 
     if (this.context !== 'test') {
+      this.verificationService = new Auth0VerificationService();
       this.verificationController = new VerificationController(
-        new Auth0VerificationService(),
+        this.verificationService,
         this.verificationRepo
       );
     } else {
+      this.verificationService = new MockVerificationService();
       this.verificationController = new VerificationController(
-        new MockVerificationService(),
+        this.verificationService,
         this.verificationRepo
       );
     }
@@ -114,6 +118,7 @@ export class CompositionRoot {
     return {
       presenter: this.verificationPresenter,
       controller: this.verificationController,
+      verificationService: this.verificationService,
     }
   }
 

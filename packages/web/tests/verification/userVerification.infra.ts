@@ -3,6 +3,7 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import { CompositionRoot } from '../../src/shared/compositionRoot/compositionRoot';
 import { VerificationPresenter } from '../../src/modules/verification/presentation/verification.presenter';
 import { VerificationController } from '../../src/modules/verification/application/verification.controller';
+import { VerificationFixture } from '../fixtures/verification.fixture';
 
 const mockAuthClient = jest.fn(() => ({
   loginWithRedirect: jest.fn(),
@@ -32,16 +33,19 @@ defineFeature(feature, (test) => {
   let compositionRoot: CompositionRoot;
   let verificationController: VerificationController;
   let verificationPresenter: VerificationPresenter;
+  let verificationFixture: VerificationFixture;
   let user = null
   let url = '';
-  let result;
+  let expected;
 
   beforeEach(async () => {
     compositionRoot = new CompositionRoot('test');
     await compositionRoot.create();
     verificationPresenter = compositionRoot.getVerificationModule().presenter;
     verificationController = compositionRoot.getVerificationModule().controller;
-    result = null;
+    expected = { userId: '123', continueUri: '/verify-user'};
+    verificationFixture = new VerificationFixture(compositionRoot);
+    verificationFixture.setVerificationResponse(expected);
   });
 
   test('New user is verified and becomes member', ({ given, and, when, then }) => {
@@ -55,12 +59,13 @@ defineFeature(feature, (test) => {
     });
 
     when('My user account is verified', async () => {
-      result = await verificationController.execute(url);
+      await verificationController.execute(url);
     });
 
     then('I am redirected to the create member page', () => {
       expect(verificationPresenter.viewModel.isVerified).toBe(true);
       expect(verificationPresenter.viewModel.continueUri).not.toBeNull();
+      expect(verificationPresenter.viewModel.continueUri).toBe(expected!.continueUri);
     });
   });
 })
