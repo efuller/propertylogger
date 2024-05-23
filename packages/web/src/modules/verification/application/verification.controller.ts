@@ -1,15 +1,11 @@
 import { VerificationService } from './verificationService.ts';
 import { VerificationRepo } from '../infra/verification.repo.ts';
+import { VerificationData } from '../domain/verificationData.ts';
 
-interface ControllerResult<T> {
+export interface VerificationResponse<T> {
   success: boolean;
   message: string;
   data: T;
-}
-
-export interface VerificationData {
-  userId: string;
-  continueUri: string;
 }
 
 export class VerificationController {
@@ -18,21 +14,19 @@ export class VerificationController {
     private readonly verificationRepository: VerificationRepo,
   ) {}
 
-  async execute(url: string): Promise<ControllerResult<VerificationData>> {
+  async execute(url: string): Promise<VerificationResponse<VerificationData>> {
     const result = await this.verificationService.verifyUser(url);
-    if (result.userId) {
-      this.verificationRepository.update({ userId: result.userId, continueUri: result.continueUri});
-      return {
-        success: true,
-        message: 'User verified',
-        data: {userId: result.userId, continueUri: result.continueUri}
-      };
-    }
+
+    this.verificationRepository.update({
+      userId: result.userId,
+      continueUri: result.continueUri,
+      success: result.success,
+    });
 
     return {
-      success: false,
-      message: 'User not verified',
-      data: {userId: '', continueUri: ''}
-    };
+      success: result.success,
+      message: result.success ? 'User verified' : 'User not verified',
+      data: result,
+    }
   }
 }

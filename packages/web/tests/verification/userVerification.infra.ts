@@ -4,10 +4,10 @@ import { CompositionRoot } from '../../src/shared/compositionRoot/compositionRoo
 import { VerificationPresenter } from '../../src/modules/verification/presentation/verification.presenter';
 import {
   VerificationController,
-  VerificationData
 } from '../../src/modules/verification/application/verification.controller';
 import { VerificationFixture } from '../fixtures/verification.fixture';
 import { MockVerificationService } from '../../src/modules/verification/infra/mockVerification.service';
+import { VerificationData } from '../../src/modules/verification/domain/verificationData';
 
 const mockAuthClient = jest.fn(() => ({
   loginWithRedirect: jest.fn(),
@@ -49,7 +49,7 @@ defineFeature(feature, (test) => {
     verificationPresenter = compositionRoot.getVerificationModule().presenter;
     verificationController = compositionRoot.getVerificationModule().controller;
     mockVerifyUser = compositionRoot.getVerificationModule().verificationService as MockVerificationService;
-    verifiedData = { userId: '1234', continueUri: '/verify-user'};
+    verifiedData = { success: true, userId: '1234', continueUri: '/verify-user'};
 
     // Set up the mock verification service to return the test verified data.
     verificationFixture = new VerificationFixture(compositionRoot);

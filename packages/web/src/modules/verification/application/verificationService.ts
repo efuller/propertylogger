@@ -1,3 +1,5 @@
+import { VerificationData } from '../domain/verificationData.ts';
+
 export interface VerificationService {
-  verifyUser(url: string): Promise<{userId: string | null, continueUri: string}>;
+  verifyUser(url: string): Promise<VerificationData>;
 }

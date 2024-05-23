@@ -2,6 +2,7 @@ import * as jose from 'jose';
 
 import { VerificationService } from '../application/verificationService.ts';
 import { CustomJWTPayload } from '../../../shared/router';
+import { VerificationData } from '../domain/verificationData.ts';
 
 export class Auth0VerificationService implements VerificationService {
   private getToken(url: string) {
@@ -36,7 +37,7 @@ export class Auth0VerificationService implements VerificationService {
     return jwt;
   }
 
-  async verifyUser(url: string): Promise<{ userId: string | null, continueUri: string }> {
+  async verifyUser(url: string): Promise<VerificationData> {
     const state = this.getState(url);
     const secret = this.getSecret();
     const token = this.getToken(url);
@@ -48,6 +49,7 @@ export class Auth0VerificationService implements VerificationService {
     return {
       userId: decoded.payload.data.user.user_id,
       continueUri,
+      success: true,
     }
   }
 }

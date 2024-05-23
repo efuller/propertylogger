@@ -11,6 +11,7 @@ import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { NotFoundPage } from '../../pages/404/404.page.tsx';
 import { VerifyingAccountPage } from '../../pages/verifyingAccount.page.tsx';
 import { VerificationController } from '../../modules/verification/application/verification.controller.ts';
+import { VerificationPresenter } from '../../modules/verification/presentation/verification.presenter.ts';
 
 export interface CustomJWTPayload {
   data: {
@@ -37,6 +38,7 @@ export class AppRouter {
     },
     private verificationModule: {
       controller: VerificationController | undefined;
+      presenter: VerificationPresenter | undefined;
     },
   ) {}
 
@@ -56,18 +58,18 @@ export class AppRouter {
       throw new Error('Journal controller is not initialized');
     }
 
-    if (!this.verificationModule.controller) {
-      throw new Error('Verification controller is not initialized');
+    if (!this.verificationModule.controller || !this.verificationModule.presenter) {
+      throw new Error('Verification controller or presenter is not initialized');
     }
 
     return [
       {
         path: '/account',
-        element: <VerifyingAccountPage controller={this.verificationModule.controller} />,
+        element: <VerifyingAccountPage controller={this.verificationModule.controller} presenter={this.verificationModule.presenter} />,
         children: [
           {
             path: 'creating-account',
-            element: <VerifyingAccountPage controller={this.verificationModule.controller} />,
+            element: <VerifyingAccountPage controller={this.verificationModule.controller} presenter={this.verificationModule.presenter} />,
           },
         ]
       },

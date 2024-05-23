@@ -1,19 +1,20 @@
 import { VerificationService } from '../application/verificationService.ts';
 import { Spy } from '@efuller/api/tests/shared/spy.ts';
+import { VerificationData } from '../domain/verificationData.ts';
 
 export class MockVerificationService extends Spy implements VerificationService {
-    private defaultResponse = { userId: '12345', continueUri: '/create-member' };
+    private defaultResponse: VerificationData = { success: true, userId: '12345', continueUri: '/create-member' };
 
     constructor() {
         super();
     }
 
-    async verifyUser(url: string): Promise<{ userId: string | null; continueUri: string; }> {
+    async verifyUser(url: string): Promise<VerificationData> {
         this.addCall('verifyUser', {params: [url], calledBy: 'VerificationService'})
         return this.defaultResponse;
     }
 
-    setDefaultResponse(response: { userId: string; continueUri: string; }) {
+    setDefaultResponse(response: VerificationData) {
         this.defaultResponse = response;
     }
 }

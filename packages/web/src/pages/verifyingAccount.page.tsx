@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VerificationController } from '../modules/verification/application/verification.controller.ts';
+import { VerificationPresenter } from '../modules/verification/presentation/verification.presenter.ts';
 
 // NOTE: I've branched off of feature/register-member
 
 interface VerifyingAccountPageProps {
   controller: VerificationController;
+  presenter: VerificationPresenter;
 }
 
 export const VerifyingAccountPage = ({controller}: VerifyingAccountPageProps) => {
@@ -13,20 +15,21 @@ export const VerifyingAccountPage = ({controller}: VerifyingAccountPageProps) =>
 
   useEffect(() => {
     const verify = async () => {
-      const maybeContinueOrNot = await controller.execute(window.location.href);
+      const result = await controller.execute(window.location.href);
 
-      if (!maybeContinueOrNot.success) {
+      if (!result.success) {
         navigate('/');
+        return;
       }
 
-      window.location.href = maybeContinueOrNot.data.continueUri;
+      window.location.href = result.data.continueUri;
     }
     verify();
   }, [controller, navigate]);
 
   return (
     <div>
-      <h1>Creating Account...</h1>
+      <h1>Verifying Account...</h1>
     </div>
   );
 }
