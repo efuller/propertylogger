@@ -5,8 +5,7 @@ Feature: User Verification
 
   @web
   Scenario: New user is verified and becomes member
-    Given I am a new user
-    And I have not been verified
+    Given I am an unverified user
     When My user account is verified
     Then I am redirected to the create member page
 
