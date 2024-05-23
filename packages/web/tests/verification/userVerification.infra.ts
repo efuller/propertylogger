@@ -50,6 +50,8 @@ defineFeature(feature, (test) => {
     verificationController = compositionRoot.getVerificationModule().controller;
     mockVerifyUser = compositionRoot.getVerificationModule().verificationService as MockVerificationService;
     verifiedData = { userId: '1234', continueUri: '/verify-user'};
+
+    // Set up the mock verification service to return the test verified data.
     verificationFixture = new VerificationFixture(compositionRoot);
     verificationFixture.setVerificationResponse(verifiedData);
   });
