@@ -8,6 +8,7 @@ export class VerificationPresenter {
     return {
       isVerified: !!verifiedData.userId,
       continueUri: verifiedData.continueUri,
+      userId: verifiedData.userId,
     }
   }
 
