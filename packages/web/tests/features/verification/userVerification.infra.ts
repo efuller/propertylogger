@@ -1,13 +1,13 @@
 import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
-import { CompositionRoot } from '../../src/shared/compositionRoot/compositionRoot';
-import { VerificationPresenter } from '../../src/modules/verification/presentation/verification.presenter';
+import { CompositionRoot } from '../../../src/shared/compositionRoot/compositionRoot';
+import { VerificationPresenter } from '../../../src/modules/verification/presentation/verification.presenter';
 import {
   VerificationController,
-} from '../../src/modules/verification/application/verification.controller';
-import { VerificationFixture } from '../fixtures/verification.fixture';
-import { MockVerificationService } from '../../src/modules/verification/infra/mockVerification.service';
-import { VerificationData } from '../../src/modules/verification/domain/verificationData';
+} from '../../../src/modules/verification/application/verification.controller';
+import { VerificationFixture } from '../../fixtures/verification.fixture';
+import { MockVerificationService } from '../../../src/modules/verification/infra/mockVerification.service';
+import { VerificationData } from '../../../src/modules/verification/domain/verificationData';
 
 const mockAuthClient = jest.fn(() => ({
   loginWithRedirect: jest.fn(),
@@ -25,7 +25,7 @@ jest.mock('@auth0/auth0-spa-js', () => ({
 }));
 
 const feature = loadFeature(
-  path.join(__dirname, '../../../../packages/shared/tests/auth/userVerification.feature'),
+  path.join(__dirname, '../../../../../packages/shared/tests/features/userVerification.feature'),
   { tagFilter: '@web and not @excluded' },
 );
 

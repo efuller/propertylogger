@@ -1,11 +1,11 @@
 import { loadFeature, defineFeature } from 'jest-cucumber';
-import { RestApiDriver } from '../../../src/shared/http/restApiDriver';
+import { RestApiDriver } from '../../src/shared/http/restApiDriver';
 import { Server } from 'http';
 import { CompositionRoot } from '@efuller/api/src/shared/composition/compositionRoot';
 import { ApiResponse } from '@efuller/shared/src/api';
 import { Journal } from '@efuller/api/src/modules/journals/domain/journal';
 
-const feature = loadFeature('./packages/shared/tests/journal/e2e/addJournal.feature', { tagFilter: '@api' });
+const feature = loadFeature('./packages/shared/tests/features/addJournal.feature', { tagFilter: '@api' });
 
 defineFeature(feature, (test) => {
   test('User sends data to create a new journal', ({ given, when, then, and }) => {
