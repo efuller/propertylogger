@@ -22,6 +22,39 @@ export abstract class Spy {
     return this.calls[methodName].length;
   }
 
+  toHaveBeenCalledWith(methodName: string, params: unknown[]) {
+    if (!this.calls[methodName]) {
+      return false;
+    }
+
+    const paramsNotCalled: unknown[] = [];
+
+    const result = params.every((param, index) => {
+
+      const someResult = this.calls[methodName].some((call) => {
+        if (!call.params) {
+          return false;
+        }
+        const wasItCalled = call.params[index] === param;
+
+        if (!wasItCalled) {
+          paramsNotCalled.push(param);
+        }
+        return wasItCalled;
+      });
+
+      if (!someResult) {
+        paramsNotCalled.forEach((param) => {
+          console.log(`Expected ${methodName} to be called with ${params}, but ${param} was not called`);
+        });
+      }
+
+      return someResult;
+    });
+
+    return result;
+  }
+
   toHaveBeenCalledBy(methodName: string, calledBy: string) {
     if (!this.calls[methodName]) {
       return false;
