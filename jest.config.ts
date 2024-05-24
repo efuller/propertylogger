@@ -61,6 +61,7 @@ export default async (): Promise<Config> => ({
     {
       displayName: 'web-infra',
       preset: "ts-jest",
+      testEnvironment: "jsdom",
       testMatch: ['**/@(src|tests)/**/*.@(infra).@(ts|tsx)'],
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
@@ -72,7 +73,7 @@ export default async (): Promise<Config> => ({
         '^jose$': __dirname + '/node_modules/jose/dist/node/cjs',
         "^uuid$": require.resolve('uuid')
       },
-      testEnvironment: "jsdom",
+      setupFiles: ['<rootDir>/setup.jest.ts'],
       rootDir: '<rootDir>/packages/web',
     },
     {

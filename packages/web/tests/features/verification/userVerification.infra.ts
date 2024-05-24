@@ -29,9 +29,6 @@ const feature = loadFeature(
   { tagFilter: '@web and not @excluded' },
 );
 
-jest.mock('jose', () => ({
-  TextEncoder: jest.fn(),
-}));
 
 defineFeature(feature, (test) => {
   let compositionRoot: CompositionRoot;
