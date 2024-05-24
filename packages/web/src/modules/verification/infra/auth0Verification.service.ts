@@ -3,20 +3,9 @@ import * as jose from 'jose';
 import { VerificationService } from '../application/verificationService.ts';
 import { CustomJWTPayload } from '../../../shared/router';
 import { VerificationData } from '../domain/verificationData.ts';
+import { UrlUtil } from '@efuller/shared/src/utils/UrlUtil.ts';
 
 export class Auth0VerificationService implements VerificationService {
-  private getToken(url: string) {
-    const searchParamsUrl = new URL(url);
-    const token: string = searchParamsUrl.searchParams.get('session_token') ?? '';
-    return token;
-  }
-
-  private getState(url: string) {
-    const searchParamsUrl = new URLSearchParams(url);
-    const state: string = searchParamsUrl.get('state') ?? '';
-    return state;
-  }
-
   private getSecret() {
     return new TextEncoder().encode(process.env.APP_SECRET_KEY);
   }
@@ -38,9 +27,9 @@ export class Auth0VerificationService implements VerificationService {
   }
 
   async verifyUser(url: string): Promise<VerificationData> {
-    const state = this.getState(url);
+    const state = UrlUtil.getSearchParam(url, 'state');
     const secret = this.getSecret();
-    const token = this.getToken(url);
+    const token = UrlUtil.getSearchParam(url, 'session_token');
     const decoded: jose.JWTVerifyResult<CustomJWTPayload> = await jose.jwtVerify(token, secret);
     const jwt = await this.createSignedJwt(decoded, state);
 

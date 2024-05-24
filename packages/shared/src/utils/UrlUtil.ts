@@ -1,4 +1,4 @@
-export class UrlUtil {
+class UrlUtil {
   public static getSearchParam(url: string, key: string): string {
     const searchParamsUrl = new URL(url);
     const param: string = searchParamsUrl.searchParams.get(key) ?? '';
@@ -6,3 +6,5 @@ export class UrlUtil {
     return param;
   }
 }
+
+export { UrlUtil };
