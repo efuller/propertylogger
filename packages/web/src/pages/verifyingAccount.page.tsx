@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { VerificationController } from '../modules/verification/application/verification.controller.ts';
 import { VerificationPresenter } from '../modules/verification/presentation/verification.presenter.ts';
 
-// NOTE: I've branched off of feature/register-member
-
 interface VerifyingAccountPageProps {
   controller: VerificationController;
   presenter: VerificationPresenter;
