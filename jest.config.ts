@@ -88,5 +88,14 @@ export default async (): Promise<Config> => ({
       },
       rootDir: '<rootDir>/packages/web'
     },
+    {
+      displayName: 'shared',
+      preset: "ts-jest",
+      testMatch: ['**/@(src|tests)/**/*.@(spec|test).@(ts|tsx)'],
+      transform: {
+        '^.+\\.tsx?$': ['ts-jest', {}],
+      },
+      rootDir: '<rootDir>/packages/shared'
+    },
   ]
 })
