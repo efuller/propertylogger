@@ -86,6 +86,7 @@ export default async (): Promise<Config> => ({
       moduleNameMapper: {
         '^jose$': __dirname + '/node_modules/jose/dist/node/cjs',
       },
+      setupFiles: ['<rootDir>/setup.jest.ts'],
       rootDir: '<rootDir>/packages/web'
     },
     {
