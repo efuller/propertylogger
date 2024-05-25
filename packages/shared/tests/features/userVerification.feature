@@ -4,7 +4,7 @@ Feature: User Verification
   So I can be created as a new member
 
   @web
-  Scenario: New user is verified and becomes member
+  Scenario: New user is verified
     Given I am an unverified user
     When My user account is verified
     Then I am redirected to the create member page

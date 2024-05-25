@@ -53,7 +53,7 @@ defineFeature(feature, (test) => {
     verificationFixture.setVerificationResponse(verifiedData);
   });
 
-  test('New user is verified and becomes member', ({ given, when, then }) => {
+  test('New user is verified', ({ given, when, then }) => {
     given('I am an unverified user', () => {
       expect(verificationPresenter.viewModel.isVerified).toBe(false);
       expect(verificationPresenter.viewModel.continueUri).toBe('');
