@@ -7,7 +7,7 @@ import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { ApiClient, MockApi } from '../apiClient/apiClient.ts';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
 import { AuthClient } from '../../modules/auth/authClient.ts';
-import { Auth0Client, createAuth0Client } from '@auth0/auth0-spa-js';
+import { Auth0Client } from '@auth0/auth0-spa-js';
 import { Auth0Adapter } from '../auth/auth0Adapter.ts';
 import { FetchApiClient } from '../apiClient/fetchApiClient.ts';
 import { MockApiClient } from '../apiClient/mockApiClient.ts';
@@ -37,7 +37,7 @@ export class CompositionRoot {
   constructor(private context: 'test' | 'production' = 'production') {}
 
   async create() {
-    const authClient = await createAuthClient();
+    const authClient = await createAuthClient<Auth0Client>(this.context);
 
     this.authClient = new Auth0Adapter(authClient);
     this.authRepo = new AuthRepo(this.authClient);

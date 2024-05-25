@@ -9,21 +9,6 @@ import { VerificationFixture } from '../../fixtures/verification.fixture';
 import { MockVerificationService } from '../../../src/modules/verification/infra/mockVerification.service';
 import { VerificationData } from '../../../src/modules/verification/domain/verificationData';
 
-const mockAuthClient = jest.fn(() => ({
-  loginWithRedirect: jest.fn(),
-  handleRedirectCallback: jest.fn(),
-  isAuthenticated: jest.fn(),
-  getTokenSilently: jest.fn(),
-  logout: jest.fn(),
-  checkSession: jest.fn(),
-}));
-
-jest.mock('@auth0/auth0-spa-js', () => ({
-  createAuth0Client: jest.fn(() => ({
-    ...mockAuthClient()
-  })),
-}));
-
 const feature = loadFeature(
   path.join(__dirname, '../../../../../packages/shared/tests/features/userVerification.feature'),
   { tagFilter: '@web and not @excluded' },
