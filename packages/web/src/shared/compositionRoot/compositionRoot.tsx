@@ -17,6 +17,7 @@ import { Auth0VerificationService } from '../../modules/verification/infra/auth0
 import { MockVerificationService } from '../../modules/verification/infra/mockVerification.service.ts';
 import { VerificationRepo } from '../../modules/verification/infra/verification.repo.ts';
 import { VerificationService } from '../../modules/verification/application/verificationService.ts';
+import { createAuthClient } from '../auth/createAuthClient.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
@@ -36,18 +37,9 @@ export class CompositionRoot {
   constructor(private context: 'test' | 'production' = 'production') {}
 
   async create() {
-    const result = await createAuth0Client({
-      domain: process.env.AUTH0_DOMAIN || '',
-      clientId: process.env.AUTH0_CLIENT_ID || '',
-      authorizationParams: {
-        redirect_uri: `${window.location.origin}/logging-in`,
-        audience: process.env.AUTH0_AUDIENCE || '',
-        scope: 'openid profile email',
-      },
-      cacheLocation: 'localstorage',
-    })
+    const authClient = await createAuthClient();
 
-    this.authClient = new Auth0Adapter(result);
+    this.authClient = new Auth0Adapter(authClient);
     this.authRepo = new AuthRepo(this.authClient);
     this.authController = new AuthController(this.authRepo);
     this.authPresenter = new AuthPresenter(this.authRepo);
