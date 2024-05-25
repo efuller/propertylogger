@@ -33,7 +33,7 @@ describe('Auth0Verification', () => {
   let textEncoderSpy: jest.SpyInstance;
   let auth0Verification: VerificationService;
   const encode = jest.fn().mockReturnValue(new Uint8Array());
-  const url = 'https://huntscribe.app/?session_token=token_1234&state=state_1234';
+  const url = 'https://propertylogger.app/?session_token=token_1234&state=state_1234';
 
   beforeEach(() => {
     textEncoderSpy = jest.spyOn(global, 'TextEncoder');
