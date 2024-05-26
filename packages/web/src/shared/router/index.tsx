@@ -12,6 +12,7 @@ import { NotFoundPage } from '../../pages/404/404.page.tsx';
 import { VerifyingAccountPage } from '../../pages/verifyingAccount.page.tsx';
 import { VerificationController } from '../../modules/verification/application/verification.controller.ts';
 import { VerificationPresenter } from '../../modules/verification/presentation/verification.presenter.ts';
+import { CreatingAccountPage } from '../../pages/creatingAccount.page.tsx';
 
 export interface CustomJWTPayload {
   data: {
@@ -65,11 +66,14 @@ export class AppRouter {
     return [
       {
         path: '/account',
-        element: <VerifyingAccountPage controller={this.verificationModule.controller} presenter={this.verificationModule.presenter} />,
         children: [
           {
-            path: 'creating-account',
+            path: 'verifying',
             element: <VerifyingAccountPage controller={this.verificationModule.controller} presenter={this.verificationModule.presenter} />,
+          },
+          {
+            path: 'creating',
+            element: <CreatingAccountPage verificationPresenter={this.verificationModule.presenter} />,
           },
         ]
       },
