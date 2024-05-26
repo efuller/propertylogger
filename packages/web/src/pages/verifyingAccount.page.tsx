@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react';
+
 import { VerificationController } from '../modules/verification/application/verification.controller.ts';
 import { VerificationPresenter } from '../modules/verification/presentation/verification.presenter.ts';
 
@@ -8,7 +10,7 @@ interface VerifyingAccountPageProps {
   presenter: VerificationPresenter;
 }
 
-export const VerifyingAccountPage = ({controller}: VerifyingAccountPageProps) => {
+export const VerifyingAccountPage = observer(({controller, presenter}: VerifyingAccountPageProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export const VerifyingAccountPage = ({controller}: VerifyingAccountPageProps) =>
         return;
       }
 
-      window.location.href = result.data.continueUri;
+      navigate('/account/creating');
     }
     verify();
   }, [controller, navigate]);
@@ -28,6 +30,7 @@ export const VerifyingAccountPage = ({controller}: VerifyingAccountPageProps) =>
   return (
     <div>
       <h1>Verifying Account...</h1>
+      {JSON.stringify(presenter.viewModel)}
     </div>
   );
-}
+});
