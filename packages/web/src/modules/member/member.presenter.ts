@@ -8,9 +8,15 @@ export class MemberPresenter {
     }
   }
 
-  constructor(private memberRepo: MemberRepo) {
+  constructor(
+    private memberRepo: MemberRepo
+  ) {
     makeObservable(this, {
       viewModel: computed
     });
+  }
+
+  async load(email: string) {
+    this.memberRepo.member = await this.memberRepo.getMemberByEmail(email);
   }
 }

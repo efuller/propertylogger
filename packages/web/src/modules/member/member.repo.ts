@@ -11,4 +11,18 @@ export class MemberRepo {
     });
     this.member = null;
   }
+
+  async createMember(member: Member) {
+    await this.apiClient.post('/member', {
+      data: member
+    });
+  }
+
+  async getMemberByEmail(email: string) {
+    const response = await this.apiClient.get<Member[]>('/member', {
+      data: email
+    });
+
+    return response.data[0];
+  }
 }
