@@ -4,5 +4,6 @@ Feature: Login
   @web
   Scenario: Successful member creation
     Given I am a new user
-    When I am created as a new member
-    Then I am able to access the app
+    When My user account is verified
+    Then I am created as a new member
+    And I am able to access the app
