@@ -18,6 +18,8 @@ import { MockVerificationService } from '../../modules/verification/infra/mockVe
 import { VerificationRepo } from '../../modules/verification/infra/verification.repo.ts';
 import { VerificationService } from '../../modules/verification/application/verificationService.ts';
 import { createAuthClient } from '../auth/createAuthClient.ts';
+import { MemberPresenter } from '../../modules/member/member.presenter.ts';
+import { MemberRepo } from '../../modules/member/member.repo.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
@@ -33,6 +35,8 @@ export class CompositionRoot {
   private verificationController!: VerificationController;
   private verificationRepo!: VerificationRepo;
   private verificationService!: VerificationService;
+  private memberPresenter!: MemberPresenter;
+  private memberRepo!: MemberRepo;
 
   constructor(private context: 'test' | 'production' = 'production') {}
 
@@ -77,6 +81,9 @@ export class CompositionRoot {
     this.journalRepo = new JournalRepo(this.apiClient);
     this.journalController = new JournalController(this.journalRepo);
     this.journalPresenter = new JournalPresenter(this.journalRepo);
+
+    this.memberRepo = new MemberRepo(this.apiClient);
+    this.memberPresenter = new MemberPresenter(this.memberRepo);
     this.router = new AppRouter(
       this.authController,
       this.getJournalModule(),
@@ -96,6 +103,12 @@ export class CompositionRoot {
     return {
       presenter: this.authPresenter,
       controller: this.authController,
+    }
+  }
+
+  getMemberModule() {
+    return {
+      presenter: this.memberPresenter,
     }
   }
 
