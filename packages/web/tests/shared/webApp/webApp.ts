@@ -1,8 +1,10 @@
 import { PuppeteerPageDriver } from '../webDriver/puppeteerPageDriver';
 import { HomePage } from '../pages/homePage';
+import { DashboardPage } from '../pages/dashboardPage';
 
 type Pages = {
   'homePage': HomePage;
+  'dashboard': DashboardPage;
 };
 
 export class WebApp {
@@ -27,7 +29,8 @@ export class WebApp {
       throw new Error('Base url has not been set');
     }
     const homePage = await HomePage.create(this.pageDriver, this.baseUrl);
-    this.pages = { homePage };
+    const dashboard = await DashboardPage.create(this.pageDriver, this.baseUrl);
+    this.pages = { homePage, dashboard };
   }
 
   async close() {

@@ -24,7 +24,7 @@ export const DashboardPage = () => {
         <p>not logged in</p>
         <h1>Welcome to PropertyLogger</h1>
         <button onClick={handleLogin}>Login</button>
-        <button onClick={handleAmIAuthenticated}>authed</button>
+        <button id="authed" onClick={handleAmIAuthenticated}>authed</button>
       </div>
     );
   }
@@ -35,7 +35,7 @@ export const DashboardPage = () => {
       <div>
         <h1>Welcome to PropertyLogger</h1>
         <button onClick={handleLogOut}>logout</button>
-        <button onClick={handleAmIAuthenticated}>authed</button>
+        <button id="authed" onClick={handleAmIAuthenticated}>authed</button>
         <Link to='/app/journals'>Journals</Link>
       </div>
     </>

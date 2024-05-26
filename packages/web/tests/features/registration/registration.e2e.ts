@@ -8,6 +8,8 @@ import { LoginButton } from '../../shared/pageComponents/home/loginButton';
 import { RegisterLink } from '../../shared/pageComponents/home/registerLink';
 import { RegisterForm } from '../../shared/pageComponents/home/registerForm';
 import { AcceptButton } from '../../shared/pageComponents/home/acceptButton';
+import { AuthedButton } from '../../shared/pageComponents/dashboard/authedButton';
+import { DashboardPage } from '../../shared/pages/dashboardPage';
 
 const feature = loadFeature(
   path.join(__dirname, '../../../../../packages/shared/tests/features/registration.feature'),
@@ -22,19 +24,23 @@ defineFeature(feature, (test) => {
   let webApp: WebApp;
   let driver: PuppeteerPageDriver;
   let homePage: HomePage;
+  let dashboard: DashboardPage;
   let loginButton: LoginButton;
   let acceptButton: AcceptButton;
   let registerForm: RegisterForm;
   let registerLink: RegisterLink;
+  let authedButton: AuthedButton;
 
   beforeAll(async () => {
-    driver = await PuppeteerPageDriver.create({ headless: false, slowMo: 100 });
+    driver = await PuppeteerPageDriver.create({ headless: false, slowMo: 75 });
     webApp = await WebApp.create(driver);
     homePage = webApp.getPageObject('homePage');
+    dashboard = webApp.getPageObject('dashboard');
     loginButton = homePage.$('loginButton');
     acceptButton = homePage.$('acceptButton');
     registerForm = homePage.$('registerForm');
     registerLink = homePage.$('registerLink');
+    authedButton = dashboard.$('authedButton');
   });
 
   afterAll(async () => {
@@ -54,9 +60,15 @@ defineFeature(feature, (test) => {
       await registerForm.fillAndSubmitForm();
     });
 
-    when('I am created as a new member', async () => {
+    when('My user account is verified', async () => {
       await homePage.waitForNavigation();
-      expect(homePage.getUrl()).toContain('creating-account');
+      expect(homePage.getUrl()).toContain('verifying');
+    });
+
+    then('I am created as a new member', async () => {
+      // we can check for username in header for FE.
+      await homePage.waitForNavigation();
+      expect(homePage.getUrl()).toContain('creating');
       await acceptButton.click();
       await homePage.waitForNavigation();
       expect(homePage.getUrl()).toContain('logging-in');
@@ -66,6 +78,8 @@ defineFeature(feature, (test) => {
       // we can check for username in header for FE.
       await homePage.waitForNavigation();
       expect(homePage.getUrl()).toContain('dashboard');
+      expect(await authedButton.isValid()).toBe(true);
+      expect(await authedButton.getText()).toBe('admin@test.com');
     });
   });
 });
