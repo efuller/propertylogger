@@ -1,4 +1,4 @@
-Feature: Login
+Feature: Registration
   As a new user, I want to be registered as a new member on property logger
 
   @web
