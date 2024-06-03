@@ -11,16 +11,16 @@ interface ApiServerRouters {
 
 export class ApiServer {
   private server: Server | null;
-  private app: Application;
+  private express: Application;
   private readonly port: number;
   private running: boolean;
 
   constructor(private readonly routers: ApiServerRouters) {
     const env = process.env.NODE_ENV || 'development';
     this.server = null;
-    this.app = express();
-    this.app.use(express.json());
-    this.app.use(cors());
+    this.express = express();
+    this.express.use(express.json());
+    this.express.use(cors());
     this.port = env === 'development' ? 3000 : 3001;
     this.running = false;
 
@@ -28,21 +28,21 @@ export class ApiServer {
   }
 
   private setupRoutes() {
-    this.app.get('/', (req, res) => {
+    this.express.get('/', (req, res) => {
       res.send({ ok: true }).status(200);
     });
 
-    this.app.get('/health', (req, res) => {
+    this.express.get('/health', (req, res) => {
       res.send({ ok: true }).status(200);
     });
 
-    this.app.use(this.routers.journal.getRouter());
+    this.express.use(this.routers.journal.getRouter());
 
-    this.app.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
+    this.express.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
       res.send({ ok: true }).status(200);
     });
 
-    this.app.use(function(err: Error, req: Request, res: Response, next: NextFunction) {
+    this.express.use(function(err: Error, req: Request, res: Response, next: NextFunction) {
       console.log('error', err);
       if (err.name === "UnauthorizedError") {
         return res.status(401).send({ msg: "Invalid token" });
@@ -76,7 +76,7 @@ export class ApiServer {
     }
 
     return new Promise((resolve) => {
-      this.server = this.app.listen(
+      this.server = this.express.listen(
         this.port,
         () => {
           console.log('Server is running on port 3000');
