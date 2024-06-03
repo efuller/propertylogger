@@ -7,3 +7,9 @@ Feature: Registration
     When My user account is verified
     Then I am created as a new member
     And I am able to access the app
+
+  @api
+  Scenario: Create new member using the API
+    Given I am a new user
+    When I request to create a member account
+    Then a new member account is created for me
