@@ -1,8 +1,8 @@
 import { ApiServer } from '../http/apiServer';
-import { Database } from '@efuller/api/src/shared/persistence/database/database';
 import { JournalService } from '@efuller/api/src/modules/journals/application/journal.service';
 import { Auth0AuthService } from '@efuller/api/src/modules/auth/adapters/auth0Auth.service';
 import { Application } from '../application';
+import { Database } from '@efuller/api/src/shared/persistence/prismaClient/database';
 
 export class CompositionRoot {
   private readonly db: Database;

@@ -1,6 +1,6 @@
-import { Database } from '@efuller/api/src/shared/persistence/database/database';
 import { ApiResponse } from '@efuller/shared/src/api';
 import { Journal } from '../domain/journal';
+import { Database } from '@efuller/api/src/shared/persistence/prismaClient/database';
 
 export class JournalService {
   constructor(private readonly db: Database) {}
