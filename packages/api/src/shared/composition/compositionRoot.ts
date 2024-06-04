@@ -1,19 +1,23 @@
 import { ApiServer } from '../http/apiServer';
 import { JournalService } from '@efuller/api/src/modules/journals/application/journal.service';
 import { Auth0AuthService } from '@efuller/api/src/modules/auth/adapters/auth0Auth.service';
-import { Application } from '../application';
+import { WebApp } from '../application';
 import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
 import { Database } from '@efuller/api/src/shared/persistence/database';
 import { PrismaJournalRepo } from '@efuller/api/src/modules/journals/adapters/prismaJournal.repo';
 
+type Environment = 'development' | 'test' | 'production';
+
 export class CompositionRoot {
+  private readonly context: Environment;
   private readonly db: Database;
   private readonly apiServer: ApiServer;
   private authService!: Auth0AuthService;
   private journalService!: JournalService;
-  private readonly application: Application;
+  private readonly application: WebApp;
 
-  constructor() {
+  constructor(context: Environment) {
+    this.context = context;
     this.db = this.createDatabase();
     this.application = this.createApplication();
     this.apiServer = this.createApiServer();
@@ -34,7 +38,7 @@ export class CompositionRoot {
     return new ApiServer(this.application);
   }
 
-  private createApplication() {
+  private createApplication(): WebApp {
     return {
       auth: this.getAuthService(),
       journals: this.getJournalService(),
