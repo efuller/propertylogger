@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import execSh from 'exec-sh';
 import path from 'path';
 
-export class Database {
+export class PrismaDbClient {
   private readonly prismaClient: PrismaClient;
 
   constructor() {

@@ -1,10 +1,10 @@
-import { Database } from './database';
+import { PrismaDbClient } from './prismaDbClient';
 
 describe('Database', () => {
-  let db: Database;
+  let db: PrismaDbClient;
 
   beforeAll(() => {
-    db = new Database();
+    db = new PrismaDbClient();
   });
 
   afterAll(async () => {
@@ -19,10 +19,10 @@ describe('Database', () => {
 });
 
 describe('Reset DB', () => {
-  let db: Database;
+  let db: PrismaDbClient;
 
   beforeAll(() => {
-    db = new Database();
+    db = new PrismaDbClient();
   });
 
   afterAll(async () => {

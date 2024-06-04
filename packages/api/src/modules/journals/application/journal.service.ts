@@ -1,9 +1,9 @@
 import { ApiResponse } from '@efuller/shared/src/api';
 import { Journal } from '../domain/journal';
-import { Database } from '@efuller/api/src/shared/persistence/prismaClient/database';
+import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
 
 export class JournalService {
-  constructor(private readonly db: Database) {}
+  constructor(private readonly db: PrismaDbClient) {}
 
   async createJournal(title: string, content: string): Promise<ApiResponse<Journal>> {
     const dbClient = this.db.getClient();
