@@ -2,8 +2,7 @@ import { Server } from 'http';
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { ProcessService } from '@efuller/shared';
-import { auth } from 'express-oauth2-jwt-bearer';
-import { Application as App } from '@efuller/api/src/shared/application';
+import { WebApp } from '@efuller/api/src/shared/application';
 import { JournalController } from '@efuller/api/src/modules/journals/adapters/journal.controller';
 import { AuthMiddleware } from '@efuller/api/src/modules/auth/infra/middleware/authMiddleware';
 
@@ -13,7 +12,7 @@ export class ApiServer {
   private readonly port: number;
   private running: boolean;
 
-  constructor(private app: App) {
+  constructor(private app: WebApp) {
     const env = process.env.NODE_ENV || 'development';
     this.server = null;
     this.express = express();
@@ -51,7 +50,7 @@ export class ApiServer {
         await journalController.create(req, res);
       });
 
-    this.express.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
+    this.express.get('/protected', authMiddleware.handle(), async (req, res) => {
       res.send({ ok: true }).status(200);
     });
 
@@ -63,22 +62,6 @@ export class ApiServer {
 
       next(err);
     });
-  }
-
-  private setupAuthMiddleware() {
-    const audience = process.env.AUTH0_AUDIENCE || '';
-    const issuerBaseURL = process.env.AUTH0_ISSUER_BASE_URL || '';
-
-    if (!audience || !issuerBaseURL) {
-      throw new Error('Missing environment variables for Auth0');
-    }
-
-    const jwtCheck = auth({
-      audience,
-      issuerBaseURL,
-      tokenSigningAlg: 'RS256'
-    });
-    return jwtCheck;
   }
 
   async start() {
