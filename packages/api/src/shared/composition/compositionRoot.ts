@@ -39,6 +39,13 @@ export class CompositionRoot {
     return this.authService;
   }
 
+  public getApplication() {
+    if (!this.application) {
+      return this.createApplication();
+    }
+    return this.application;
+  }
+
   public getAuthService() {
     if (!this.authService) {
       return this.createAuthService();
