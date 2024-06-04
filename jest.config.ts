@@ -7,7 +7,7 @@ export default async (): Promise<Config> => ({
   projects: [
     {
       displayName: 'api-unit',
-      testMatch: ['**/@(src|tests)/**/*.@(test|spec).@(ts|tsx)'],
+      testMatch: ['**/@(src|tests)/**/*.@(test|spec|unit).@(ts|tsx)'],
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
       },
