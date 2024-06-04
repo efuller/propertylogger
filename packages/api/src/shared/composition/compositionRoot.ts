@@ -3,18 +3,31 @@ import { JournalService } from '@efuller/api/src/modules/journals/application/jo
 import { Auth0AuthService } from '@efuller/api/src/modules/auth/adapters/auth0Auth.service';
 import { Application } from '../application';
 import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
+import { Database } from '@efuller/api/src/shared/persistence/database';
+import { PrismaJournalRepo } from '@efuller/api/src/modules/journals/adapters/prismaJournal.repo';
 
 export class CompositionRoot {
-  private readonly db: PrismaDbClient;
+  private readonly db: Database;
   private readonly apiServer: ApiServer;
   private authService!: Auth0AuthService;
   private journalService!: JournalService;
   private readonly application: Application;
 
   constructor() {
-    this.db = new PrismaDbClient();
+    this.db = this.createDatabase();
     this.application = this.createApplication();
     this.apiServer = this.createApiServer();
+  }
+
+  private createDatabase() {
+    const prismaClient = new PrismaDbClient();
+
+    return {
+      journals: new PrismaJournalRepo(prismaClient),
+      reset: async () => {
+        await prismaClient.reset();
+      }
+    }
   }
 
   createApiServer() {
