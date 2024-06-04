@@ -3,11 +3,9 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { ProcessService } from '@efuller/shared';
 import { auth } from 'express-oauth2-jwt-bearer';
-import { JournalRouter } from '@efuller/api/src/shared/http/routers/journalRouter';
-
-interface ApiServerRouters {
-  journal: JournalRouter;
-}
+import { Application as App } from '@efuller/api/src/shared/application';
+import { JournalController } from '@efuller/api/src/modules/journals/adapters/journal.controller';
+import { AuthMiddleware } from '@efuller/api/src/modules/auth/infra/middleware/authMiddleware';
 
 export class ApiServer {
   private server: Server | null;
@@ -15,7 +13,7 @@ export class ApiServer {
   private readonly port: number;
   private running: boolean;
 
-  constructor(private readonly routers: ApiServerRouters) {
+  constructor(private app: App) {
     const env = process.env.NODE_ENV || 'development';
     this.server = null;
     this.express = express();
@@ -28,6 +26,10 @@ export class ApiServer {
   }
 
   private setupRoutes() {
+    const authMiddleware = new AuthMiddleware(this.app.auth);
+    const journalService = this.app.journals;
+    const journalController = new JournalController(journalService);
+
     this.express.get('/', (req, res) => {
       res.send({ ok: true }).status(200);
     });
@@ -36,7 +38,18 @@ export class ApiServer {
       res.send({ ok: true }).status(200);
     });
 
-    this.express.use(this.routers.journal.getRouter());
+    this.express.get(
+      '/journal',
+      authMiddleware.handle(),
+      async (req, res) => {
+        await journalController.getAll(req, res);
+      });
+
+    this.express.post(
+      '/journal',
+      async (req, res) => {
+        await journalController.create(req, res);
+      });
 
     this.express.get('/protected', this.setupAuthMiddleware(), async (req, res) => {
       res.send({ ok: true }).status(200);

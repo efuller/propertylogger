@@ -1,28 +1,56 @@
 import { ApiServer } from '../http/apiServer';
 import { Database } from '@efuller/api/src/shared/persistence/database/database';
-import { JournalController } from '@efuller/api/src/modules/journals/adapters/journal.controller';
 import { JournalService } from '@efuller/api/src/modules/journals/application/journal.service';
-import { AuthMiddleware } from '@efuller/api/src/modules/auth/infra/middleware/authMiddleware';
 import { Auth0AuthService } from '@efuller/api/src/modules/auth/adapters/auth0Auth.service';
-import { JournalRouter } from '@efuller/api/src/shared/http/routers/journalRouter';
+import { Application } from '../application';
 
 export class CompositionRoot {
   private readonly db: Database;
   private readonly apiServer: ApiServer;
+  private authService!: Auth0AuthService;
+  private journalService!: JournalService;
+  private readonly application: Application;
 
   constructor() {
     this.db = new Database();
+    this.application = this.createApplication();
     this.apiServer = this.createApiServer();
   }
 
   createApiServer() {
-    const authService = new Auth0AuthService();
-    const authMiddleware = new AuthMiddleware(authService);
-    const journalService = new JournalService(this.db);
-    const journalController = new JournalController(journalService);
-    const journalRouter = new JournalRouter(authMiddleware, journalController);
+    return new ApiServer(this.application);
+  }
 
-    return new ApiServer({ journal: journalRouter });
+  private createApplication() {
+    return {
+      auth: this.getAuthService(),
+      journals: this.getJournalService(),
+    };
+  }
+
+  private createJournalService() {
+    return new JournalService(this.db);
+  }
+
+  private createAuthService() {
+    if (!this.authService) {
+      this.authService = new Auth0AuthService();
+    }
+    return this.authService;
+  }
+
+  public getAuthService() {
+    if (!this.authService) {
+      return this.createAuthService();
+    }
+    return this.authService;
+  }
+
+  public getJournalService() {
+    if (!this.journalService) {
+      return this.createJournalService();
+    }
+    return this.journalService;
   }
 
   getApiServer() {
