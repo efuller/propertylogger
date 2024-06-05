@@ -2,14 +2,13 @@ Feature: Journaling
   As a user I should be able to create, edit, and delete journal entries
 
   @api
-  Scenario Outline: User sends data to create a new journal
-    Given the backend API is accessible
-    When a user sends a POST request to the "/journal" endpoint with a title of <title> and content of <content>
-    Then the API should respond with a success of true
-    And the response should contain title of <title> and content of <content>
+  Scenario Outline: Create a new journal
+    Given I have created a new journal with a title of <newTitle> and content of <newContent>
+    When I save the journal
+    Then I should be able to retrieve the journal
 
     Examples:
-      | title       | content                |
+      | newTitle    | newContent             |
       | Test Journal| Sample journal content |
 
   @web

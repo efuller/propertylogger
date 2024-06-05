@@ -8,12 +8,14 @@ import { Journal } from '@efuller/api/src/modules/journals/domain/journal';
 const feature = loadFeature('./packages/shared/tests/features/addJournal.feature', { tagFilter: '@api' });
 
 defineFeature(feature, (test) => {
-  test('User sends data to create a new journal', ({ given, when, then, and }) => {
+  test('Create a new journal', ({ given, when, then, and }) => {
     const compositionRoot = new CompositionRoot('test');
     const apiServer = compositionRoot.getApiServer();
     const db = compositionRoot.getDatabase();
     let apiDriver: RestApiDriver;
     let response: ApiResponse<Partial<Partial<Journal>>>;
+    let title: string;
+    let content: string;
 
     beforeAll(async () => {
       await apiServer.start();
@@ -25,19 +27,18 @@ defineFeature(feature, (test) => {
       await db.reset();
     });
 
-    given('The backend API is accessible', async () => {
+    given(/^I have created a new journal with a title of (.*) and content of (.*)$/, async (newTitle, newContent) => {
+      title = newTitle;
+      content = newContent;
       expect(apiServer.isRunning()).toBeTruthy();
     });
 
-    when(/^a user sends a POST request to the "(.*)" endpoint with a title of (.*) and content of (.*)$/, async (endpoint, title, content) => {
-      response = await apiDriver.post<Partial<Journal>>(endpoint, { title, content });
+    when(/^I save the journal$/, async () => {
+      console.log('title', title, 'content', content);
+      response = await apiDriver.post<Partial<Journal>>('/journal', { title, content });
     });
 
-    then(/^the API should respond with a success of true$/, () => {
-      expect(response.success).toBe(true);
-    });
-
-    and(/^the response should contain title of (.*) and content of (.*)$/, (title, content) => {
+    then(/^I should be able to retrieve the journal$/, () => {
       expect(response.data).toMatchObject({ data: { title, content }, success: true });
     });
   });
