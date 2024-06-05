@@ -3,7 +3,7 @@ import { Server } from 'http';
 import { CompositionRoot } from '@efuller/api/src/shared/composition/compositionRoot';
 
 describe('Web Server', () => {
-  const compositionRoot = new CompositionRoot();
+  const compositionRoot = new CompositionRoot('test');
   const apiServer = compositionRoot.getApiServer();
 
   beforeEach(async () => {
