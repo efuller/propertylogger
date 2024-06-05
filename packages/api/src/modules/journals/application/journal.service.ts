@@ -1,14 +1,15 @@
 import { ApiResponse } from '@efuller/shared/src/api';
-import { Journal } from '../domain/journal';
 import { Database } from '@efuller/api/src/shared/persistence/database';
+import { JournalDto } from '@efuller/api/src/modules/journals/application/journal.dto';
+import { Journal } from '../domain/journal';
 
 export class JournalService {
   constructor(private readonly db: Database) {}
 
-  async createJournal(title: string, content: string): Promise<ApiResponse<Journal>> {
+  async createJournal(dto: JournalDto): Promise<ApiResponse<Journal>> {
     const result = await this.db.journals.createJournal(
-      title,
-      content,
+      dto.props.title,
+      dto.props?.content || '',
     );
 
     return result;

@@ -6,7 +6,7 @@ import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient
 import { Database } from '@efuller/api/src/shared/persistence/database';
 import { PrismaJournalRepo } from '@efuller/api/src/modules/journals/adapters/prismaJournal.repo';
 
-type Environment = 'development' | 'test' | 'production';
+export type Environment = 'development' | 'test' | 'production';
 
 export class CompositionRoot {
   private readonly context: Environment;

@@ -9,7 +9,7 @@ const feature = loadFeature('./packages/shared/tests/features/addJournal.feature
 
 defineFeature(feature, (test) => {
   test('User sends data to create a new journal', ({ given, when, then, and }) => {
-    const compositionRoot = new CompositionRoot();
+    const compositionRoot = new CompositionRoot('test');
     const apiServer = compositionRoot.getApiServer();
     const db = compositionRoot.getDatabase();
     let apiDriver: RestApiDriver;
