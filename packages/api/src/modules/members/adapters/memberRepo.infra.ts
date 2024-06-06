@@ -1,8 +1,10 @@
 import { PrismaMemberRepo } from '@efuller/api/src/modules/members/adapters/prismaMember.repo';
 import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
+import { InMemoryMemberRepo } from '@efuller/api/src/modules/members/adapters/inMemoryMember.repo';
 
 describe('MemberRepo', () => {
   const memberRepos = [
+    new InMemoryMemberRepo(),
     new PrismaMemberRepo(new PrismaDbClient())
   ];
 
