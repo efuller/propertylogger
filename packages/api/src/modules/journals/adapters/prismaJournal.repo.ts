@@ -1,11 +1,12 @@
 import { Journal } from '@prisma/client';
 import { ApiResponse } from '@efuller/shared/src/api';
 import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
+import { JournalDto } from '@efuller/api/src/modules/journals/application/journal.dto';
 
 export class PrismaJournalRepo {
   constructor(private readonly db: PrismaDbClient) {}
 
-  async createJournal(title: string, content: string): Promise<ApiResponse<Journal>> {
+  async createJournal(title: string, content: string): Promise<ApiResponse<JournalDto>> {
     const dbClient = this.db.getClient();
 
     const result = await dbClient.journal.create({
@@ -21,7 +22,7 @@ export class PrismaJournalRepo {
     }
   }
 
-  async getJournals(): Promise<ApiResponse<Journal[]>> {
+  async getJournals(): Promise<ApiResponse<JournalDto[]>> {
     const dbClient = this.db.getClient();
 
     const result = await dbClient.journal.findMany();
