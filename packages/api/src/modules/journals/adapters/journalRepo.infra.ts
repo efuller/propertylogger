@@ -14,10 +14,7 @@ describe('JournalRepo', () => {
     };
 
     for (const journalRepo of journalRepos) {
-      const journal = await journalRepo.createJournal(
-        journalDto.title,
-        journalDto.content
-      );
+      const journal = await journalRepo.createJournal(journalDto);
 
       expect(journal.success).toBeTruthy();
       expect(journal.data?.title).toBe(journalDto.title);

@@ -5,11 +5,8 @@ import { CreateJournalDto, JournalDto } from '@efuller/api/src/modules/journals/
 export class JournalService {
   constructor(private readonly db: Database) {}
 
-  async createJournal(dto: CreateJournalDto): Promise<ApiResponse<JournalDto>> {
-    const result = await this.db.journals.createJournal(
-      dto.title,
-      dto.content,
-    );
+  async createJournal(user: CreateJournalDto): Promise<ApiResponse<JournalDto>> {
+    const result = await this.db.journals.createJournal(user);
 
     return result;
   }
