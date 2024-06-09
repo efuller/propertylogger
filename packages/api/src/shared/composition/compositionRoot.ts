@@ -5,6 +5,10 @@ import { WebApp } from '../application';
 import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
 import { Database } from '@efuller/api/src/shared/persistence/database';
 import { PrismaJournalRepo } from '@efuller/api/src/modules/journals/adapters/prismaJournal.repo';
+import { MemberService } from '@efuller/api/src/modules/members/application/memberService';
+import { PrismaMemberRepo } from '@efuller/api/src/modules/members/adapters/prismaMember.repo';
+import { InMemoryJournalRepo } from '@efuller/api/src/modules/journals/adapters/inMemoryJournal.repo';
+import { InMemoryMemberRepo } from '@efuller/api/src/modules/members/adapters/inMemoryMember.repo';
 
 export type Environment = 'development' | 'test' | 'production';
 
@@ -14,6 +18,7 @@ export class CompositionRoot {
   private readonly apiServer: ApiServer;
   private authService!: Auth0AuthService;
   private journalService!: JournalService;
+  private memberService!: MemberService;
   private readonly application: WebApp;
 
   constructor(context: Environment) {
@@ -24,12 +29,23 @@ export class CompositionRoot {
   }
 
   private createDatabase() {
-    const prismaClient = new PrismaDbClient();
+    if (this.context !== 'development') {
+      const prismaClient = new PrismaDbClient();
+
+      return {
+        journals: new PrismaJournalRepo(prismaClient),
+        members: new PrismaMemberRepo(prismaClient),
+        reset: async () => {
+          await prismaClient.reset();
+        }
+      }
+    }
 
     return {
-      journals: new PrismaJournalRepo(prismaClient),
+      journals: new InMemoryJournalRepo(),
+      members: new InMemoryMemberRepo(),
       reset: async () => {
-        await prismaClient.reset();
+        return Promise.resolve();
       }
     }
   }
@@ -42,7 +58,12 @@ export class CompositionRoot {
     return {
       auth: this.getAuthService(),
       journals: this.getJournalService(),
+      members: this.getMemberService(),
     };
+  }
+
+  private createMemberService() {
+    return new MemberService(this.db);
   }
 
   private createJournalService() {
@@ -75,6 +96,13 @@ export class CompositionRoot {
       return this.createJournalService();
     }
     return this.journalService;
+  }
+
+  public getMemberService() {
+    if (!this.memberService) {
+      return this.createMemberService();
+    }
+    return this.memberService;
   }
 
   getApiServer() {
