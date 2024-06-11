@@ -13,15 +13,22 @@ export class RestApiDriver {
   }
 
   async post<T extends object>(path: string, data: T): Promise<ApiResponse<Partial<T>>> {
-    const response =  await request(this.http)
-      .post(path)
-      .set('Accept', 'application/json')
-      .send(data);
-
-    return {
-      success: response.error ? false : true,
-      data: response.body,
-      error: response.error,
-    };
+    try {
+      const response =  await request(this.http)
+        .post(path)
+        .set('Accept', 'application/json')
+        .send(data);
+      return {
+        success: true,
+        data: response.body,
+        error: false,
+      };
+    } catch (error) {
+     return {
+        success: false,
+        data: undefined,
+        error: error as Error,
+      };
+    }
   }
 }
