@@ -3,7 +3,7 @@ import { RestApiDriver } from '../../src/shared/http/restApiDriver';
 import { Server } from 'http';
 import { CompositionRoot } from '@efuller/api/src/shared/composition/compositionRoot';
 import { ApiResponse } from '@efuller/shared/src/api';
-import { Journal } from '@efuller/api/src/modules/journals/domain/journal';
+import { CreateJournalDto, JournalDto } from '@efuller/api/src/modules/journals/application/journal.dto';
 
 const feature = loadFeature('./packages/shared/tests/features/addJournal.feature', { tagFilter: '@api' });
 
@@ -13,7 +13,7 @@ defineFeature(feature, (test) => {
     const apiServer = compositionRoot.getApiServer();
     const db = compositionRoot.getDatabase();
     let apiDriver: RestApiDriver;
-    let response: ApiResponse<Partial<Partial<Journal>>>;
+    let response: ApiResponse<Partial<Partial<JournalDto>>>;
     let title: string;
     let content: string;
 
@@ -34,12 +34,12 @@ defineFeature(feature, (test) => {
     });
 
     when(/^I save the journal$/, async () => {
-      console.log('title', title, 'content', content);
-      response = await apiDriver.post<Partial<Journal>>('/journal', { title, content });
+      response = await apiDriver.post<CreateJournalDto, JournalDto>('/journal', { title, content });
     });
 
     then(/^I should be able to retrieve the journal$/, () => {
-      expect(response.data).toMatchObject({ data: { title, content }, success: true });
+      expect(response.success).toBe(true);
+      expect(response.data).toMatchObject(expect.objectContaining({ title, content } ));
     });
   });
 });
