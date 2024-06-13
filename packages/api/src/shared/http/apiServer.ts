@@ -5,6 +5,7 @@ import { ProcessService } from '@efuller/shared';
 import { WebApp } from '@efuller/api/src/shared/application';
 import { JournalController } from '@efuller/api/src/modules/journals/adapters/journal.controller';
 import { AuthMiddleware } from '@efuller/api/src/modules/auth/infra/middleware/authMiddleware';
+import { MemberController } from '@efuller/api/src/modules/members/adapters/member.controller';
 
 export class ApiServer {
   private server: Server | null;
@@ -28,6 +29,7 @@ export class ApiServer {
     const authMiddleware = new AuthMiddleware(this.app.auth);
     const journalService = this.app.journals;
     const journalController = new JournalController(journalService);
+    const memberController = new MemberController(this.app.members);
 
     this.express.get('/', (req, res) => {
       res.send({ ok: true }).status(200);
@@ -48,6 +50,12 @@ export class ApiServer {
       '/journal',
       async (req, res) => {
         await journalController.create(req, res);
+      });
+
+    this.express.post(
+      '/member',
+      async (req, res) => {
+        await memberController.create(req, res);
       });
 
     this.express.get('/protected', authMiddleware.handle(), async (req, res) => {
