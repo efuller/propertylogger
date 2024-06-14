@@ -52,6 +52,12 @@ export class ApiServer {
         await journalController.create(req, res);
       });
 
+    this.express.get(
+      '/member',
+      async (req, res) => {
+        await memberController.getMemberByEmail(req, res);
+      });
+
     this.express.post(
       '/member',
       async (req, res) => {

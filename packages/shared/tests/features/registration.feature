@@ -13,3 +13,9 @@ Feature: Registration
     Given I am a new user
     When I request to create a member account
     Then a new member account is created for me
+
+  @api
+  Scenario: Create and retrieve new member by email address using the API
+    Given I am a new user
+    When I request to create a member account
+    Then I am able to retrieve that member account by email
