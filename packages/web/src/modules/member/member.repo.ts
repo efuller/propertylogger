@@ -23,6 +23,10 @@ export class MemberRepo {
       data: email
     });
 
+    if (!response.data) {
+      return null;
+    }
+
     return response.data[0];
   }
 }
