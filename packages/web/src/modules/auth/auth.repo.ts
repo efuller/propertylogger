@@ -49,5 +49,9 @@ export class AuthRepo {
   public async getToken() {
     return this.authClient?.getToken();
   }
+
+  public async getUser() {
+    return this.authClient?.getUser();
+  }
 }
 

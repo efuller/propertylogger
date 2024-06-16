@@ -29,4 +29,8 @@ export class Auth0Adapter implements AuthClient {
   public async checkSession(): Promise<void> {
     await this.auth0Client.checkSession();
   }
+
+  public async getUser(): Promise<Record<string, never> | undefined> {
+    return await this.auth0Client.getUser();
+  }
 }

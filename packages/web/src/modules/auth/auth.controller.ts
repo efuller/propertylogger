@@ -22,4 +22,8 @@ export class AuthController {
   async getToken() {
     return await this.authRepo.getToken();
   }
+
+  async getUser() {
+    return await this.authRepo.getUser();
+  }
 }
