@@ -8,7 +8,7 @@ import { CreateJournalDto, JournalDto } from '@efuller/api/src/modules/journals/
 const feature = loadFeature('./packages/shared/tests/features/addJournal.feature', { tagFilter: '@api' });
 
 defineFeature(feature, (test) => {
-  test('Create a new journal', ({ given, when, then, and }) => {
+  test('Create a new journal', ({ given, when, then}) => {
     const compositionRoot = new CompositionRoot('test');
     const apiServer = compositionRoot.getApiServer();
     const db = compositionRoot.getDatabase();
