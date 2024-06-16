@@ -47,8 +47,8 @@ defineFeature(feature, (test) => {
     await webApp.close();
   });
 
-  test('successful member creation', ({ given, when, then}) => {
-    given('I am a new user', async () => {
+  test('Successful member creation', ({ given, when, then, and}) => {
+    given('I have registered as a new user', async () => {
       await homePage.navigate();
 
       expect(await loginButton.isValid()).toBe(true);
@@ -58,26 +58,23 @@ defineFeature(feature, (test) => {
       expect(await registerLink.isValid()).toBe(true);
       await registerLink.click();
       await registerForm.fillAndSubmitForm();
-    });
 
-    when('My user account is verified', async () => {
       await homePage.waitForNavigation();
-      expect(homePage.getUrl()).toContain('verifying');
-    });
-
-    then('I am created as a new member', async () => {
-      // we can check for username in header for FE.
-      await homePage.waitForNavigation();
-      expect(homePage.getUrl()).toContain('creating');
       await acceptButton.click();
+    });
+
+    when('I am redirected to the logging in page', async () => {
       await homePage.waitForNavigation();
       expect(homePage.getUrl()).toContain('logging-in');
     });
 
-    then('I am able to access the app', async () => {
-      // we can check for username in header for FE.
+    then('I am redirected to the dashboard', async () => {
       await homePage.waitForNavigation();
       expect(homePage.getUrl()).toContain('dashboard');
+    });
+
+    and('My member email is present on the page', async () => {
+      // we can check for username in header for FE.
       expect(await authedButton.isValid()).toBe(true);
       expect(await authedButton.getText()).toBe('admin@test.com');
     });

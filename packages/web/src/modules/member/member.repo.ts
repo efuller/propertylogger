@@ -1,5 +1,5 @@
 import { ApiClient } from '../../shared/apiClient/apiClient.ts';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { Member } from './member.model.ts';
 
 export class MemberRepo {
@@ -8,6 +8,7 @@ export class MemberRepo {
   constructor(private apiClient: ApiClient) {
     makeObservable(this, {
       member: observable,
+      getMemberByEmail: action,
     });
     this.member = null;
   }
@@ -19,14 +20,14 @@ export class MemberRepo {
   }
 
   async getMemberByEmail(email: string) {
-    const response = await this.apiClient.get<Member[]>('/member', {
-      data: email
-    });
+    const response = await this.apiClient.get<Member>(`/member/${email}`, {});
 
     if (!response.data) {
       return null;
     }
 
-    return response.data[0];
+    this.member = {...response.data};
+
+    return this.member;
   }
 }

@@ -3,10 +3,10 @@ Feature: Registration
 
   @web
   Scenario: Successful member creation
-    Given I am a new user
-    When My user account is verified
-    Then I am created as a new member
-    And I am able to access the app
+    Given I have registered as a new user
+    When I am redirected to the logging in page
+    Then I am redirected to the dashboard
+    And My member email is present on the page
 
   @api
   Scenario: Create new member using the API
