@@ -24,4 +24,8 @@ export class MockAuth0Adapter implements AuthClient {
   public async checkSession(): Promise<void> {
     return Promise.resolve(undefined);
   }
+
+  public async getUser(): Promise<Record<string, never>> {
+    return {};
+  }
 }
