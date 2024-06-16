@@ -25,7 +25,7 @@ export class MemberService {
     if (!member) {
       return {
         error: false,
-        success: false,
+        success: true,
         data: null,
       };
     }
