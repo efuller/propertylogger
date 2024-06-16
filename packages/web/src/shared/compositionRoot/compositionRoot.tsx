@@ -90,9 +90,10 @@ export class CompositionRoot {
       this.memberRepo
     );
     this.router = new AppRouter(
-      this.authController,
+      this.getAuthModule(),
       this.getJournalModule(),
-      this.getVerificationModule()
+      this.getVerificationModule(),
+      this.getMemberModule(),
     );
     return true;
   }

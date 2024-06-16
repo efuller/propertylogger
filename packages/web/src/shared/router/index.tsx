@@ -13,6 +13,9 @@ import { VerifyingAccountPage } from '../../pages/verifyingAccount.page.tsx';
 import { VerificationController } from '../../modules/verification/application/verification.controller.ts';
 import { VerificationPresenter } from '../../modules/verification/presentation/verification.presenter.ts';
 import { CreatingAccountPage } from '../../pages/creatingAccount.page.tsx';
+import { MemberController } from '../../modules/member/member.controller.ts';
+import { MemberPresenter } from '../../modules/member/member.presenter.ts';
+import { AuthPresenter } from '../../modules/auth/auth.presenter.ts';
 
 export interface CustomJWTPayload {
   data: {
@@ -32,7 +35,10 @@ export const hasAuthParams = (searchParams = window.location.search): boolean =>
 
 export class AppRouter {
   constructor(
-    private authController: AuthController,
+    private authModule: {
+      controller: AuthController;
+      presenter: AuthPresenter;
+    },
     private journalModule: {
       presenter: JournalPresenter | undefined;
       controller: JournalController | undefined;
@@ -41,10 +47,14 @@ export class AppRouter {
       controller: VerificationController | undefined;
       presenter: VerificationPresenter | undefined;
     },
+    private memberModule: {
+      controller: MemberController | undefined;
+      presenter: MemberPresenter | undefined;
+    }
   ) {}
 
   private async protectedLoader() {
-    const isAuthenticated = await this.authController.isAuthenticated()
+    const isAuthenticated = await this.authModule.controller.isAuthenticated()
 
     if (!isAuthenticated) {
       // TODO: How to redirect back to the current page after login?
@@ -55,12 +65,20 @@ export class AppRouter {
   }
 
   getRouteMap(): RouteObject[] {
+    if (!this.authModule.presenter || !this.authModule.controller) {
+      throw new Error('Journal controller is not initialized');
+    }
+
     if (!this.journalModule.presenter || !this.journalModule.controller) {
       throw new Error('Journal controller is not initialized');
     }
 
     if (!this.verificationModule.controller || !this.verificationModule.presenter) {
       throw new Error('Verification controller or presenter is not initialized');
+    }
+
+    if (!this.memberModule.controller || !this.memberModule.presenter) {
+      throw new Error('Member controller or presenter is not initialized');
     }
 
     return [
@@ -79,7 +97,11 @@ export class AppRouter {
       },
       {
         path: '/logging-in',
-        element: <LoggingInPage />,
+        element: <LoggingInPage
+          controller={this.authModule.controller}
+          memberController={this.memberModule.controller}
+          memberPresenter={this.memberModule.presenter}
+        />,
         loader: async () => {
           const hasParams = hasAuthParams();
 
@@ -87,16 +109,16 @@ export class AppRouter {
             return redirect('/');
           }
 
-          await this.authController.handleRedirectCallback();
+          await this.authModule.controller.handleRedirectCallback();
 
-          return redirect('/app/dashboard');
+          return null;
         }
       },
       {
         path: '/',
         element: <HomePage />,
         loader: async () => {
-          await this.authController.isAuthenticated();
+          await this.authModule.controller.isAuthenticated();
           return null;
         }
       },
@@ -107,7 +129,11 @@ export class AppRouter {
         children: [
           {
             path: '/app/dashboard',
-            element: <DashboardPage />,
+            element: <DashboardPage
+              authController={this.authModule.controller}
+              authPresenter={this.authModule.presenter}
+              memberPresenter={this.memberModule.presenter}
+            />,
           },
           {
             path: '/app/journals',
