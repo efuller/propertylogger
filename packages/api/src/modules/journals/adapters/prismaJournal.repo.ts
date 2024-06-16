@@ -1,4 +1,3 @@
-import { Journal } from '@prisma/client';
 import { ApiResponse } from '@efuller/shared/src/api';
 import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
 import { CreateJournalDto, JournalDto } from '@efuller/api/src/modules/journals/application/journal.dto';
@@ -38,7 +37,7 @@ export class PrismaJournalRepo implements JournalRepo {
 
     return {
       success: true,
-      data: result.map((journal: Journal) => ({ ...journal })),
+      data: result.map((journal: JournalDto) => ({ ...journal })),
     }
   }
 }
