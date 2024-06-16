@@ -5,7 +5,7 @@ import { CreateMemberDto, MemberDto } from '@efuller/api/src/modules/members/app
 
 const feature = loadFeature(
   './packages/shared/tests/features/registration.feature',
-  { tagFilter: '@api' }
+  { tagFilter: '@api and not @e2e' }
 );
 
 defineFeature(feature, (test) => {
