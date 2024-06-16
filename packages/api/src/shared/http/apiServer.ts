@@ -53,7 +53,8 @@ export class ApiServer {
       });
 
     this.express.get(
-      '/member',
+      '/member/:email',
+      authMiddleware.handle(),
       async (req, res) => {
         await memberController.getMemberByEmail(req, res);
       });
