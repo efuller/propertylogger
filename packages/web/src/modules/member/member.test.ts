@@ -20,7 +20,6 @@ describe('Member', () => {
     });
 
     await controller.createMember({email: 'admin@test.com'});
-    await presenter.load('admin@test.com');
 
     expect(presenter.viewModel.member?.email).toBe('admin@test.com');
   });

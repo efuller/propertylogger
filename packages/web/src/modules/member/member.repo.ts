@@ -9,6 +9,7 @@ export class MemberRepo {
     makeObservable(this, {
       member: observable,
       getMemberByEmail: action,
+      createMember: action,
     });
     this.member = null;
   }
@@ -17,6 +18,8 @@ export class MemberRepo {
     await this.apiClient.post('/member', {
       data: member
     });
+
+    this.member = member;
   }
 
   async getMemberByEmail(email: string) {
