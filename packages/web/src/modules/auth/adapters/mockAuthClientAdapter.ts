@@ -1,6 +1,6 @@
-import { AuthClient } from '../../modules/auth/authClient.ts';
+import { AuthClient } from '../authClient.ts';
 
-export class MockAuth0Adapter implements AuthClient {
+export class MockAuthClientAdapter implements AuthClient {
   public async login(): Promise<void> {
     return;
   }

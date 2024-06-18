@@ -1,7 +1,7 @@
 import { Auth0Client } from '@auth0/auth0-spa-js';
-import { AuthClient } from '../../modules/auth/authClient.ts';
+import { AuthClient } from '../authClient.ts';
 
-export class Auth0Adapter implements AuthClient {
+export class Auth0AuthClientAdapter implements AuthClient {
   constructor(private auth0Client: Auth0Client) {
     this.auth0Client = auth0Client;
   }

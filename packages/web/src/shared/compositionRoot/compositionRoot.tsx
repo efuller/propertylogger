@@ -6,9 +6,6 @@ import { JournalRepo } from '../../modules/jounals/journal.repo.ts';
 import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { ApiClient, MockApi } from '../apiClient/apiClient.ts';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
-import { AuthClient } from '../../modules/auth/authClient.ts';
-import { Auth0Client } from '@auth0/auth0-spa-js';
-import { Auth0Adapter } from '../auth/auth0Adapter.ts';
 import { FetchApiClient } from '../apiClient/fetchApiClient.ts';
 import { MockApiClient } from '../apiClient/mockApiClient.ts';
 import { VerificationPresenter } from '../../modules/verification/presentation/verification.presenter.ts';
@@ -23,7 +20,8 @@ import { MemberController } from '../../modules/member/member.controller.ts';
 import { LoginPresenter } from '../../modules/login/login.presenter.ts';
 import { LoginController } from '../../modules/login/login.controller.ts';
 import { LoginRepo } from '../../modules/login/login.repo.ts';
-import { createAuthClient } from '../auth/createAuthClient.ts';
+import { AuthService } from '../../modules/auth/auth.service.ts';
+import { createAuthClient } from '../../modules/auth/adapters/createAuthClient.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
@@ -34,7 +32,7 @@ export class CompositionRoot {
   private journalPresenter!: JournalPresenter;
   private journalController!: JournalController;
   private apiClient!: ApiClient | MockApi;
-  private authClient!: AuthClient | Auth0Client;
+  private authService!: AuthService;
   private verificationPresenter!: VerificationPresenter;
   private verificationController!: VerificationController;
   private verificationRepo!: VerificationRepo;
@@ -49,10 +47,10 @@ export class CompositionRoot {
   constructor(private context: 'test' | 'production' = 'production') {}
 
   async create() {
-    const authClient = await createAuthClient<Auth0Client>(this.context);
+    const authClient = await createAuthClient(this.context);
 
-    this.authClient = new Auth0Adapter(authClient);
-    this.authRepo = new AuthRepo(this.authClient);
+    this.authService = new AuthService(authClient);
+    this.authRepo = new AuthRepo(this.authService);
     this.authController = new AuthController(this.authRepo);
     this.authPresenter = new AuthPresenter(this.authRepo);
     this.verificationRepo = new VerificationRepo();
