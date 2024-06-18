@@ -17,10 +17,13 @@ import { Auth0VerificationService } from '../../modules/verification/infra/auth0
 import { MockVerificationService } from '../../modules/verification/infra/mockVerification.service.ts';
 import { VerificationRepo } from '../../modules/verification/infra/verification.repo.ts';
 import { VerificationService } from '../../modules/verification/application/verificationService.ts';
-import { createAuthClient } from '../auth/createAuthClient.ts';
 import { MemberPresenter } from '../../modules/member/member.presenter.ts';
 import { MemberRepo } from '../../modules/member/member.repo.ts';
 import { MemberController } from '../../modules/member/member.controller.ts';
+import { LoginPresenter } from '../../modules/login/login.presenter.ts';
+import { LoginController } from '../../modules/login/login.controller.ts';
+import { LoginRepo } from '../../modules/login/login.repo.ts';
+import { createAuthClient } from '../auth/createAuthClient.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
@@ -39,6 +42,9 @@ export class CompositionRoot {
   private memberPresenter!: MemberPresenter;
   private memberController!: MemberController;
   private memberRepo!: MemberRepo;
+  private loginPresenter!: LoginPresenter;
+  private loginController!: LoginController;
+  private loginRepo!: LoginRepo;
 
   constructor(private context: 'test' | 'production' = 'production') {}
 
@@ -89,6 +95,9 @@ export class CompositionRoot {
     this.memberController = new MemberController(
       this.memberRepo
     );
+    this.loginRepo = new LoginRepo();
+    this.loginPresenter = new LoginPresenter(this.loginRepo);
+    this.loginController = new LoginController(this.authController, this.loginRepo);
     this.router = new AppRouter(
       this.getAuthModule(),
       this.getJournalModule(),
@@ -103,6 +112,13 @@ export class CompositionRoot {
       throw new Error('Router not set up');
     }
     return this.router;
+  }
+
+  getLoginModule() {
+    return {
+      presenter: this.loginPresenter,
+      controller: this.loginController,
+    }
   }
 
   getAuthModule() {
