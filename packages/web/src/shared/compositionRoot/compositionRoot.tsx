@@ -134,11 +134,11 @@ export class CompositionRoot {
     }
   }
 
-  setAsLoggedIn() {
+  setAsLoggedIn(status = true) {
     if (!this.authRepo) {
       throw new Error('Auth repo not set up');
     }
-    this.authRepo.authenticated = true;
+    this.authRepo.authenticated = status;
   }
 
   getApiClient(): ApiClient | MockApi {
