@@ -9,7 +9,8 @@
     "staging:start:e2e": "NODE_ENV=test ts-node ./dist/index.js",
     "start": "nodemon",
     "prisma:generate": "prisma generate",
-    "prisma:reset": "prisma db push --force-reset"
+    "prisma:reset": "prisma db push --force-reset",
+    "prisma:reset:no-force": "prisma db push"
   },
   "keywords": [],
   "author": "",

@@ -21,7 +21,6 @@ describe('Member', () => {
     });
 
     const result = await controller.createMember({email: 'admin@test.com'});
-    console.log('result', result);
 
     expect(result.success).toBe(true);
     expect(result.data).not.toBeNull();
