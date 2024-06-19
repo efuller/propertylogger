@@ -7,10 +7,14 @@ export class MemberController {
   ) {}
 
   async createMember(member: Member) {
-    await this.memberRepo.createMember(member);
+    return await this.memberRepo.createMember(member);
   }
 
   async getMemberByEmail(email: string) {
     return await this.memberRepo.getMemberByEmail(email);
+  }
+
+  async setMember(member: Member) {
+    this.memberRepo.member = member;
   }
 }

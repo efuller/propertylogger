@@ -15,22 +15,20 @@ export class MemberRepo {
   }
 
   async createMember(member: Member) {
-    await this.apiClient.post('/member', {
+    const result = await this.apiClient.post('/member', {
       data: member
     });
 
-    this.member = member;
+    return result;
   }
 
   async getMemberByEmail(email: string) {
     const response = await this.apiClient.get<Member>(`/member/${email}`, {});
 
-    if (!response.data) {
-      return null;
-    }
+    return response;
+  }
 
-    this.member = {...response.data};
-
-    return this.member;
+  async setMember(member: Member) {
+    this.member = member;
   }
 }
