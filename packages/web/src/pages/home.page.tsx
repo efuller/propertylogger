@@ -1,5 +1,5 @@
 import { compositionRoot } from '../shared/compositionRoot/compositionRoot.tsx';
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '../components/ui/button.tsx';
 
 export const HomePage = () => {
   const { controller } = compositionRoot.getAuthModule();
