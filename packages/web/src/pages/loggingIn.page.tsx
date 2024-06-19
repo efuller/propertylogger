@@ -1,25 +1,37 @@
-import { compositionRoot } from '../shared/compositionRoot/compositionRoot.tsx';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import { MemberPresenter } from '../modules/member/member.presenter.ts';
+import { LoginController } from '../modules/login/login.controller.ts';
+import { LoginPresenter } from '../modules/login/login.presenter.ts';
 
-export const LoggingInPage = () => {
+interface LoggingInPageProps {
+  controller: LoginController;
+  presenter: LoginPresenter;
+  memberPresenter: MemberPresenter;
+}
+
+export const LoggingInPage = observer(({
+  controller,
+  presenter,
+  memberPresenter,
+}: LoggingInPageProps) => {
   const navigate = useNavigate();
-  const { controller} = compositionRoot.getAuthModule();
 
   useEffect(() => {
-    async function check() {
-      const isAuthenticated = await controller.isAuthenticated();
-      if (isAuthenticated) {
-        navigate('/app/dashboard');
-      } else {
-        navigate('/');
-      }
+    controller.check();
+  }, [controller]);
+
+  useEffect(() => {
+    if (presenter.viewModel.redirectTo) {
+      navigate(presenter.viewModel.redirectTo);
     }
-    check();
-  }, [controller, navigate]);
+  }, [navigate, presenter.viewModel.redirectTo]);
+
   return (
     <div>
       <h1>Logging in...</h1>
+      {JSON.stringify(memberPresenter.viewModel) }
     </div>
   );
-}
+})

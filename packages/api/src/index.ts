@@ -1,6 +1,8 @@
-import { CompositionRoot } from '@efuller/api/src/shared/composition/compositionRoot';
+import { CompositionRoot, Environment } from '@efuller/api/src/shared/composition/compositionRoot';
 
-const compositionRoot = new CompositionRoot();
+const env = process.env.NODE_ENV || 'production';
+
+const compositionRoot = new CompositionRoot(env as Environment);
 const apiServer = compositionRoot.getApiServer();
 
 async function bootstrap() {

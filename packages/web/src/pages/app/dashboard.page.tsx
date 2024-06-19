@@ -1,30 +1,42 @@
-import { compositionRoot } from '../../shared/compositionRoot/compositionRoot.tsx';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import { AuthController } from '../../modules/auth/auth.controller.ts';
+import { AuthPresenter } from '../../modules/auth/auth.presenter.ts';
+import { MemberPresenter } from '../../modules/member/member.presenter.ts';
 
-export const DashboardPage = () => {
+interface DashboardPageProps {
+  authController: AuthController;
+  authPresenter: AuthPresenter;
+  memberPresenter: MemberPresenter;
+}
+
+export const DashboardPage = observer(({
+  authController,
+  authPresenter,
+  memberPresenter,
+}: DashboardPageProps) => {
   const navigate = useNavigate();
-  const { controller, presenter } = compositionRoot.getAuthModule();
 
   const handleLogin = async () => {
-    await controller.login();
+    await authController.login();
   }
 
   const handleLogOut = async () => {
-    await controller.logout();
+    await authController.logout();
     navigate('/');
   }
 
   const handleAmIAuthenticated = async () => {
-    await controller.isAuthenticated();
+    await authController.isAuthenticated();
   }
 
-  if (!presenter.viewModel.isAuthenticated) {
+  if (!authPresenter.viewModel.isAuthenticated) {
     return (
       <div>
         <p>not logged in</p>
         <h1>Welcome to PropertyLogger</h1>
         <button onClick={handleLogin}>Login</button>
-        <button onClick={handleAmIAuthenticated}>authed</button>
+        <button id="authed" onClick={handleAmIAuthenticated}>authed</button>
       </div>
     );
   }
@@ -35,8 +47,11 @@ export const DashboardPage = () => {
       <div>
         <h1>Welcome to PropertyLogger</h1>
         <button onClick={handleLogOut}>logout</button>
-        <button onClick={handleAmIAuthenticated}>authed</button>
+        <button id="authed" onClick={handleAmIAuthenticated}>{
+          memberPresenter.viewModel.member?.email || 'no email'
+        }</button>
+        <Link to='/app/journals'>Journals</Link>
       </div>
     </>
   );
-}
+})

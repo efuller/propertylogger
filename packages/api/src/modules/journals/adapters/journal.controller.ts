@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { JournalService } from '../application/journal.service';
+import { CreateJournalDto } from '@efuller/api/src/modules/journals/application/journal.dto';
 
 export class JournalController {
   constructor(private readonly journalService: JournalService) {}
@@ -7,7 +8,8 @@ export class JournalController {
   async create(req: Request, res: Response) {
     const { title, content = '' } = req.body;
 
-    const result = await this.journalService.createJournal(title, content);
+    const dto: CreateJournalDto = {title, content};
+    const result = await this.journalService.createJournal(dto);
 
     if (!result.success) {
       return res.status(500).json(result);

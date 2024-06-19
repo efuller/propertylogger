@@ -1,28 +1,114 @@
 import { ApiServer } from '../http/apiServer';
-import { Database } from '@efuller/api/src/shared/persistence/database/database';
-import { JournalController } from '@efuller/api/src/modules/journals/adapters/journal.controller';
 import { JournalService } from '@efuller/api/src/modules/journals/application/journal.service';
-import { AuthMiddleware } from '@efuller/api/src/modules/auth/infra/middleware/authMiddleware';
 import { Auth0AuthService } from '@efuller/api/src/modules/auth/adapters/auth0Auth.service';
-import { JournalRouter } from '@efuller/api/src/shared/http/routers/journalRouter';
+import { WebApp } from '../application';
+import { PrismaDbClient } from '@efuller/api/src/shared/persistence/prismaClient/prismaDbClient';
+import { Database } from '@efuller/api/src/shared/persistence/database';
+import { PrismaJournalRepo } from '@efuller/api/src/modules/journals/adapters/prismaJournal.repo';
+import { MemberService } from '@efuller/api/src/modules/members/application/memberService';
+import { PrismaMemberRepo } from '@efuller/api/src/modules/members/adapters/prismaMember.repo';
+import { InMemoryJournalRepo } from '@efuller/api/src/modules/journals/adapters/inMemoryJournal.repo';
+import { InMemoryMemberRepo } from '@efuller/api/src/modules/members/adapters/inMemoryMember.repo';
+import { MockAuthService } from '@efuller/api/src/modules/auth/adapters/mockAuthService';
+import { AuthService } from '@efuller/api/src/modules/auth/application/auth.service';
+
+export type Environment = 'development' | 'test' | 'production';
 
 export class CompositionRoot {
+  private readonly context: Environment;
   private readonly db: Database;
   private readonly apiServer: ApiServer;
+  private authService!: AuthService;
+  private journalService!: JournalService;
+  private memberService!: MemberService;
+  private readonly application: WebApp;
 
-  constructor() {
-    this.db = new Database();
+  constructor(context: Environment) {
+    this.context = context;
+    this.db = this.createDatabase();
+    this.application = this.createApplication();
     this.apiServer = this.createApiServer();
   }
 
-  createApiServer() {
-    const authService = new Auth0AuthService();
-    const authMiddleware = new AuthMiddleware(authService);
-    const journalService = new JournalService(this.db);
-    const journalController = new JournalController(journalService);
-    const journalRouter = new JournalRouter(authMiddleware, journalController);
+  private createDatabase() {
+    if (this.context !== 'development') {
+      const prismaClient = new PrismaDbClient();
 
-    return new ApiServer({ journal: journalRouter });
+      return {
+        journals: new PrismaJournalRepo(prismaClient),
+        members: new PrismaMemberRepo(prismaClient),
+        reset: async () => {
+          await prismaClient.reset();
+        }
+      }
+    }
+
+    return {
+      journals: new InMemoryJournalRepo(),
+      members: new InMemoryMemberRepo(),
+      reset: async () => {
+        return Promise.resolve();
+      }
+    }
+  }
+
+  createApiServer() {
+    return new ApiServer(this.application);
+  }
+
+  private createApplication(): WebApp {
+    return {
+      auth: this.getAuthService(),
+      journals: this.getJournalService(),
+      members: this.getMemberService(),
+    };
+  }
+
+  private createMemberService() {
+    return new MemberService(this.db);
+  }
+
+  private createJournalService() {
+    return new JournalService(this.db);
+  }
+
+  private createAuthService() {
+    if (!this.authService && this.context !== 'test') {
+      this.authService = new Auth0AuthService();
+    }
+
+    if (this.context === 'test') {
+      this.authService = new MockAuthService();
+    }
+    return this.authService;
+  }
+
+  public getApplication() {
+    if (!this.application) {
+      return this.createApplication();
+    }
+    return this.application;
+  }
+
+  public getAuthService() {
+    if (!this.authService) {
+      return this.createAuthService();
+    }
+    return this.authService;
+  }
+
+  public getJournalService() {
+    if (!this.journalService) {
+      return this.createJournalService();
+    }
+    return this.journalService;
+  }
+
+  public getMemberService() {
+    if (!this.memberService) {
+      return this.createMemberService();
+    }
+    return this.memberService;
   }
 
   getApiServer() {

@@ -1,5 +1,4 @@
 import { redirect, RouteObject } from 'react-router-dom';
-import * as jose from 'jose';
 
 import { HomePage } from '../../pages/home.page.tsx';
 import { LoggingInPage } from '../../pages/loggingIn.page.tsx';
@@ -10,7 +9,11 @@ import { JournalsPage } from '../../pages/app/journals/journals.page.tsx';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
 import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { NotFoundPage } from '../../pages/404/404.page.tsx';
-import { CreatingAccountPage } from '../../pages/creatingAccount.page.tsx';
+import { MemberController } from '../../modules/member/member.controller.ts';
+import { MemberPresenter } from '../../modules/member/member.presenter.ts';
+import { AuthPresenter } from '../../modules/auth/auth.presenter.ts';
+import { LoginPresenter } from '../../modules/login/login.presenter.ts';
+import { LoginController } from '../../modules/login/login.controller.ts';
 
 export interface CustomJWTPayload {
   data: {
@@ -30,15 +33,26 @@ export const hasAuthParams = (searchParams = window.location.search): boolean =>
 
 export class AppRouter {
   constructor(
-    private authController: AuthController,
+    private authModule: {
+      controller: AuthController;
+      presenter: AuthPresenter;
+    },
     private journalModule: {
       presenter: JournalPresenter | undefined;
       controller: JournalController | undefined;
+    },
+    private memberModule: {
+      controller: MemberController | undefined;
+      presenter: MemberPresenter | undefined;
+    },
+    private loginModule: {
+      controller: LoginController | undefined;
+      presenter: LoginPresenter | undefined;
     }
   ) {}
 
   private async protectedLoader() {
-    const isAuthenticated = await this.authController.isAuthenticated()
+    const isAuthenticated = await this.authModule.controller.isAuthenticated()
 
     if (!isAuthenticated) {
       // TODO: How to redirect back to the current page after login?
@@ -49,65 +63,47 @@ export class AppRouter {
   }
 
   getRouteMap(): RouteObject[] {
+    if (!this.authModule.presenter || !this.authModule.controller) {
+      throw new Error('Journal controller is not initialized');
+    }
+
     if (!this.journalModule.presenter || !this.journalModule.controller) {
       throw new Error('Journal controller is not initialized');
     }
+
+    if (!this.memberModule.controller || !this.memberModule.presenter) {
+      throw new Error('Member controller or presenter is not initialized');
+    }
+
+    if (!this.loginModule.controller || !this.loginModule.presenter) {
+      throw new Error('Login controller or presenter is not initialized');
+    }
+
     return [
       {
-        path: '/creating-account',
-        element: <CreatingAccountPage />,
-        loader: async (item) => {
-          if (!process.env.AUTH0_DOMAIN) {
-            throw new Error('AUTH0_DOMAIN is not set');
-          }
+        path: '/logging-in',
+        element: <LoggingInPage
+          controller={this.loginModule.controller}
+          presenter={this.loginModule.presenter}
+          memberPresenter={this.memberModule.presenter}
+        />,
+        loader: async () => {
+          const hasParams = hasAuthParams();
 
-          if (!process.env.APP_SECRET_KEY) {
-            throw new Error('APP_SECRET_KEY is not set');
-          }
-
-          const url = new URL(item.request.url);
-          const token = url.searchParams.get('session_token');
-          const state = url.searchParams.get('state');
-
-          if (!token) {
+          if (!hasParams) {
             return redirect('/');
           }
 
-          const secret = new TextEncoder().encode(process.env.APP_SECRET_KEY);
-          const decoded: jose.JWTVerifyResult<CustomJWTPayload> = await jose.jwtVerify(token, secret);
+          await this.authModule.controller.handleRedirectCallback();
 
-          const created = { state, memberCreate: true };
-          const alg = 'HS256'
-          const jwt = await new jose.SignJWT(created)
-            .setIssuedAt()
-            .setSubject(decoded.payload.data.user.user_id)
-            .setProtectedHeader({ alg, typ: 'JWT' })
-            .setIssuer(process.env.AUTH0_DOMAIN)
-            .setExpirationTime('2h')
-            .sign(secret);
-
-          const continueUri = `${decoded.payload.continue_uri}?state=${state}&session_token=${jwt}`;
-
-          return redirect(continueUri);
-        }
-      },
-      {
-        path: '/logging-in',
-        element: <LoggingInPage />,
-        loader: async () => {
-          await this.authController.isAuthenticated();
-
-          if (hasAuthParams()) {
-              await this.authController.handleRedirectCallback();
-          }
-          return redirect('/app/dashboard');
+          return null;
         }
       },
       {
         path: '/',
         element: <HomePage />,
         loader: async () => {
-          await this.authController.isAuthenticated();
+          await this.authModule.controller.isAuthenticated();
           return null;
         }
       },
@@ -118,7 +114,11 @@ export class AppRouter {
         children: [
           {
             path: '/app/dashboard',
-            element: <DashboardPage />,
+            element: <DashboardPage
+              authController={this.authModule.controller}
+              authPresenter={this.authModule.presenter}
+              memberPresenter={this.memberModule.presenter}
+            />,
           },
           {
             path: '/app/journals',

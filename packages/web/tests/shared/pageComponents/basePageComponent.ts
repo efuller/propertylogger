@@ -53,4 +53,9 @@ export class BasePageComponent<T extends ComponentElementsConfig> {
     const input = await this.$(key);
     await input.click();
   }
+
+  async getText() {
+    const input = await this.$(Object.keys(this.componentConfig)[0] as keyof T);
+    return await this.pageDriver.page.evaluate((el) => el.textContent, input);
+  }
 }

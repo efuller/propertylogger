@@ -4,6 +4,7 @@ import { MockApi, Options } from './apiClient.ts';
 
 export class MockApiClient implements MockApi {
   private getResponse: ApiResponse<unknown> | undefined;
+  private postResponse: ApiResponse<unknown> | undefined;
 
   constructor(
     private readonly baseUrl: string,
@@ -16,7 +17,7 @@ export class MockApiClient implements MockApi {
   }
 
   public setPostResponse<T>(response: ApiResponse<T>) {
-    this.getResponse = response;
+    this.postResponse = response;
     return this;
   }
 
@@ -26,7 +27,7 @@ export class MockApiClient implements MockApi {
   }
 
   public async post<T>(path: string, options: Options<T>): Promise<ApiResponse<T>> {
-    console.log('post', path, options);
-    return this.getResponse as ApiResponse<T>;
+    console.log('post', path, options, this.postResponse);
+    return this.postResponse as ApiResponse<T>;
   }
 }

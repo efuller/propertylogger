@@ -7,7 +7,7 @@ export default async (): Promise<Config> => ({
   projects: [
     {
       displayName: 'api-unit',
-      testMatch: ['**/@(src|tests)/**/*.@(test|spec).@(ts|tsx)'],
+      testMatch: ['**/@(src|tests)/**/*.@(test|spec|unit).@(ts|tsx)'],
       transform: {
         '^.+\\.tsx?$': ['ts-jest', {}],
       },
@@ -59,6 +59,24 @@ export default async (): Promise<Config> => ({
       rootDir: '<rootDir>/packages/web'
     },
     {
+      displayName: 'web-infra',
+      preset: "ts-jest",
+      testEnvironment: "jsdom",
+      testMatch: ['**/@(src|tests)/**/*.@(infra).@(ts|tsx)'],
+      transform: {
+        '^.+\\.tsx?$': ['ts-jest', {}],
+      },
+      transformIgnorePatterns: [
+        __dirname + '/node_modules/(?!uuid).+\\.js$'
+      ],
+      moduleNameMapper: {
+        '^jose$': __dirname + '/node_modules/jose/dist/node/cjs',
+        "^uuid$": require.resolve('uuid')
+      },
+      setupFiles: ['<rootDir>/setup.jest.ts'],
+      rootDir: '<rootDir>/packages/web',
+    },
+    {
       displayName: 'web',
       preset: "ts-jest",
       testEnvironment: "jsdom",
@@ -69,7 +87,17 @@ export default async (): Promise<Config> => ({
       moduleNameMapper: {
         '^jose$': __dirname + '/node_modules/jose/dist/node/cjs',
       },
+      setupFiles: ['<rootDir>/setup.jest.ts'],
       rootDir: '<rootDir>/packages/web'
+    },
+    {
+      displayName: 'shared',
+      preset: "ts-jest",
+      testMatch: ['**/@(src|tests)/**/*.@(spec|test).@(ts|tsx)'],
+      transform: {
+        '^.+\\.tsx?$': ['ts-jest', {}],
+      },
+      rootDir: '<rootDir>/packages/shared'
     },
   ]
 })

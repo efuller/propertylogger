@@ -1,9 +1,10 @@
 import { RestApiDriver } from './restApiDriver';
 import { Server } from 'http';
 import { CompositionRoot } from '@efuller/api/src/shared/composition/compositionRoot';
+import { ApiResponse } from '@efuller/shared/src/api';
 
 describe('Web Server', () => {
-  const compositionRoot = new CompositionRoot();
+  const compositionRoot = new CompositionRoot('test');
   const apiServer = compositionRoot.getApiServer();
 
   beforeEach(async () => {
@@ -23,8 +24,8 @@ describe('Web Server', () => {
     const server = apiServer.getServer();
     const restApiDriver = new RestApiDriver(server as Server);
     await apiServer.start();
-    const response = await restApiDriver.get('/health');
-    expect(response.status).toBe(200);
-    expect(response.ok).toBe(true);
+    const response = await restApiDriver.get<ApiResponse<void>>('/health');
+    console.log('response', response);
+    expect(response).toMatchObject({ok: true});
   });
 });

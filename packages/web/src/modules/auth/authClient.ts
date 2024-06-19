@@ -5,4 +5,5 @@ export interface AuthClient {
   getToken(): Promise<string>;
   isAuthenticated(): Promise<boolean>;
   checkSession(): Promise<void>;
+  getUser(): Promise<Record<string, never> | undefined>;
 }

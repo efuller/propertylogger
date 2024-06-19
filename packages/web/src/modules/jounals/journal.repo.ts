@@ -19,6 +19,9 @@ export class JournalRepo {
     });
 
     runInAction(() => {
+      if (!result.data) {
+        return;
+      }
       this.journals.push({
         title: result.data.title,
         content: result.data.content,
@@ -28,7 +31,12 @@ export class JournalRepo {
 
   async getJournals() {
     const response = await this.apiClient.get<Journal[]>('/journal', {} );
+
     runInAction(() => {
+      if (!response.data) {
+        return;
+      }
+
       this.journals = [
         ...this.journals,
         ...response.data
