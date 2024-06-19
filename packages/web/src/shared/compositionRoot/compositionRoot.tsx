@@ -22,6 +22,7 @@ import { LoginController } from '../../modules/login/login.controller.ts';
 import { LoginRepo } from '../../modules/login/login.repo.ts';
 import { AuthService } from '../../modules/auth/auth.service.ts';
 import { createAuthClient } from '../../modules/auth/adapters/createAuthClient.ts';
+import { AuthClient } from '../../modules/auth/authClient.ts';
 
 export class CompositionRoot {
   router: AppRouter | undefined;
@@ -43,13 +44,14 @@ export class CompositionRoot {
   private loginPresenter!: LoginPresenter;
   private loginController!: LoginController;
   private loginRepo!: LoginRepo;
+  private authClient!: AuthClient;
 
   constructor(private context: 'test' | 'production' = 'production') {}
 
   async create() {
-    const authClient = await createAuthClient(this.context);
+    this.authClient = await createAuthClient(this.context);
 
-    this.authService = new AuthService(authClient);
+    this.authService = new AuthService(this.authClient);
     this.authRepo = new AuthRepo(this.authService);
     this.authController = new AuthController(this.authRepo);
     this.authPresenter = new AuthPresenter(this.authRepo);
@@ -95,12 +97,13 @@ export class CompositionRoot {
     );
     this.loginRepo = new LoginRepo();
     this.loginPresenter = new LoginPresenter(this.loginRepo);
-    this.loginController = new LoginController(this.authController, this.loginRepo);
+    this.loginController = new LoginController(this.authController, this.memberController, this.loginRepo);
     this.router = new AppRouter(
       this.getAuthModule(),
       this.getJournalModule(),
       this.getVerificationModule(),
       this.getMemberModule(),
+      this.getLoginModule(),
     );
     return true;
   }
@@ -161,6 +164,14 @@ export class CompositionRoot {
     }
 
     return this.apiClient;
+  }
+
+  getAuthClient() {
+    if (!this.authClient) {
+      throw new Error('Auth client not set up');
+    }
+
+    return this.authClient;
   }
 }
 

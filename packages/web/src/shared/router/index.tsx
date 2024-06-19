@@ -16,6 +16,8 @@ import { CreatingAccountPage } from '../../pages/creatingAccount.page.tsx';
 import { MemberController } from '../../modules/member/member.controller.ts';
 import { MemberPresenter } from '../../modules/member/member.presenter.ts';
 import { AuthPresenter } from '../../modules/auth/auth.presenter.ts';
+import { LoginPresenter } from '../../modules/login/login.presenter.ts';
+import { LoginController } from '../../modules/login/login.controller.ts';
 
 export interface CustomJWTPayload {
   data: {
@@ -50,6 +52,10 @@ export class AppRouter {
     private memberModule: {
       controller: MemberController | undefined;
       presenter: MemberPresenter | undefined;
+    },
+    private loginModule: {
+      controller: LoginController | undefined;
+      presenter: LoginPresenter | undefined;
     }
   ) {}
 
@@ -81,6 +87,10 @@ export class AppRouter {
       throw new Error('Member controller or presenter is not initialized');
     }
 
+    if (!this.loginModule.controller || !this.loginModule.presenter) {
+      throw new Error('Login controller or presenter is not initialized');
+    }
+
     return [
       {
         path: '/account',
@@ -98,8 +108,8 @@ export class AppRouter {
       {
         path: '/logging-in',
         element: <LoggingInPage
-          controller={this.authModule.controller}
-          memberController={this.memberModule.controller}
+          controller={this.loginModule.controller}
+          presenter={this.loginModule.presenter}
           memberPresenter={this.memberModule.presenter}
         />,
         loader: async () => {

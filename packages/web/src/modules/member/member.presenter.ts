@@ -17,6 +17,11 @@ export class MemberPresenter {
   }
 
   async load(email: string) {
-    this.memberRepo.member = await this.memberRepo.getMemberByEmail(email);
+    const result = await this.memberRepo.getMemberByEmail(email);
+
+    if (!result.success || !result.data) {
+      return;
+    }
+    await this.memberRepo.setMember(result.data);
   }
 }
