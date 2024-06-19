@@ -63,7 +63,6 @@ defineFeature(feature, (test) => {
 
     then('I am able to retrieve that member account by email', async () => {
       const result = await apiDriver.get(`/member/${user.email}`);
-      console.log('RESULT', result);
 
       expect(result.error).toBe(false);
       expect(result.success).toBe(true);
