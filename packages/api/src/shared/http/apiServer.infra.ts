@@ -25,6 +25,7 @@ describe('Web Server', () => {
     const restApiDriver = new RestApiDriver(server as Server);
     await apiServer.start();
     const response = await restApiDriver.get<ApiResponse<void>>('/health');
-    expect(response.success).toBe(true);
+    console.log('response', response);
+    expect(response).toMatchObject({ok: true});
   });
 });

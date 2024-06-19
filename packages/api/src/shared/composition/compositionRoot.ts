@@ -9,6 +9,8 @@ import { MemberService } from '@efuller/api/src/modules/members/application/memb
 import { PrismaMemberRepo } from '@efuller/api/src/modules/members/adapters/prismaMember.repo';
 import { InMemoryJournalRepo } from '@efuller/api/src/modules/journals/adapters/inMemoryJournal.repo';
 import { InMemoryMemberRepo } from '@efuller/api/src/modules/members/adapters/inMemoryMember.repo';
+import { MockAuthService } from '@efuller/api/src/modules/auth/adapters/mockAuthService';
+import { AuthService } from '@efuller/api/src/modules/auth/application/auth.service';
 
 export type Environment = 'development' | 'test' | 'production';
 
@@ -16,7 +18,7 @@ export class CompositionRoot {
   private readonly context: Environment;
   private readonly db: Database;
   private readonly apiServer: ApiServer;
-  private authService!: Auth0AuthService;
+  private authService!: AuthService;
   private journalService!: JournalService;
   private memberService!: MemberService;
   private readonly application: WebApp;
@@ -71,8 +73,12 @@ export class CompositionRoot {
   }
 
   private createAuthService() {
-    if (!this.authService) {
+    if (!this.authService && this.context !== 'test') {
       this.authService = new Auth0AuthService();
+    }
+
+    if (this.context === 'test') {
+      this.authService = new MockAuthService();
     }
     return this.authService;
   }

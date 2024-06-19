@@ -62,12 +62,12 @@ defineFeature(feature, (test) => {
     });
 
     then('I am able to retrieve that member account by email', async () => {
-      const result = await apiDriver.get(`/member/?${user.email}`);
+      const result = await apiDriver.get(`/member/${user.email}`);
       console.log('RESULT', result);
 
       expect(result.error).toBe(false);
       expect(result.success).toBe(true);
-      expect(result.data).toMatchObject(expect.objectContaining(user));
+      expect(result.data).toMatchObject(user);
     });
   });
 });

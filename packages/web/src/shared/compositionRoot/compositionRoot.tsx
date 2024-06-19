@@ -8,12 +8,6 @@ import { ApiClient, MockApi } from '../apiClient/apiClient.ts';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
 import { FetchApiClient } from '../apiClient/fetchApiClient.ts';
 import { MockApiClient } from '../apiClient/mockApiClient.ts';
-import { VerificationPresenter } from '../../modules/verification/presentation/verification.presenter.ts';
-import { VerificationController } from '../../modules/verification/application/verification.controller.ts';
-import { Auth0VerificationService } from '../../modules/verification/infra/auth0Verification.service.ts';
-import { MockVerificationService } from '../../modules/verification/infra/mockVerification.service.ts';
-import { VerificationRepo } from '../../modules/verification/infra/verification.repo.ts';
-import { VerificationService } from '../../modules/verification/application/verificationService.ts';
 import { MemberPresenter } from '../../modules/member/member.presenter.ts';
 import { MemberRepo } from '../../modules/member/member.repo.ts';
 import { MemberController } from '../../modules/member/member.controller.ts';
@@ -34,10 +28,6 @@ export class CompositionRoot {
   private journalController!: JournalController;
   private apiClient!: ApiClient | MockApi;
   private authService!: AuthService;
-  private verificationPresenter!: VerificationPresenter;
-  private verificationController!: VerificationController;
-  private verificationRepo!: VerificationRepo;
-  private verificationService!: VerificationService;
   private memberPresenter!: MemberPresenter;
   private memberController!: MemberController;
   private memberRepo!: MemberRepo;
@@ -55,22 +45,6 @@ export class CompositionRoot {
     this.authRepo = new AuthRepo(this.authService);
     this.authController = new AuthController(this.authRepo);
     this.authPresenter = new AuthPresenter(this.authRepo);
-    this.verificationRepo = new VerificationRepo();
-    this.verificationPresenter = new VerificationPresenter(this.verificationRepo);
-
-    if (this.context !== 'test') {
-      this.verificationService = new Auth0VerificationService();
-      this.verificationController = new VerificationController(
-        this.verificationService,
-        this.verificationRepo
-      );
-    } else {
-      this.verificationService = new MockVerificationService();
-      this.verificationController = new VerificationController(
-        this.verificationService,
-        this.verificationRepo
-      );
-    }
 
     if (this.context !== 'test') {
       this.authController = new AuthController(this.authRepo);
@@ -101,7 +75,6 @@ export class CompositionRoot {
     this.router = new AppRouter(
       this.getAuthModule(),
       this.getJournalModule(),
-      this.getVerificationModule(),
       this.getMemberModule(),
       this.getLoginModule(),
     );
@@ -140,14 +113,6 @@ export class CompositionRoot {
     return {
       presenter: this.journalPresenter,
       controller: this.journalController,
-    }
-  }
-
-  getVerificationModule() {
-    return {
-      presenter: this.verificationPresenter,
-      controller: this.verificationController,
-      verificationService: this.verificationService,
     }
   }
 

@@ -17,11 +17,7 @@ export class RestApiDriver {
         }
       }
 
-      return {
-        success: true,
-        data: response.body,
-        error: undefined,
-      }
+      return response.body;
     } catch (error) {
       return {
         success: false,

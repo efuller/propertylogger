@@ -9,10 +9,6 @@ import { JournalsPage } from '../../pages/app/journals/journals.page.tsx';
 import { JournalController } from '../../modules/jounals/journal.controller.ts';
 import { JournalPresenter } from '../../modules/jounals/journal.presenter.ts';
 import { NotFoundPage } from '../../pages/404/404.page.tsx';
-import { VerifyingAccountPage } from '../../pages/verifyingAccount.page.tsx';
-import { VerificationController } from '../../modules/verification/application/verification.controller.ts';
-import { VerificationPresenter } from '../../modules/verification/presentation/verification.presenter.ts';
-import { CreatingAccountPage } from '../../pages/creatingAccount.page.tsx';
 import { MemberController } from '../../modules/member/member.controller.ts';
 import { MemberPresenter } from '../../modules/member/member.presenter.ts';
 import { AuthPresenter } from '../../modules/auth/auth.presenter.ts';
@@ -45,10 +41,6 @@ export class AppRouter {
       presenter: JournalPresenter | undefined;
       controller: JournalController | undefined;
     },
-    private verificationModule: {
-      controller: VerificationController | undefined;
-      presenter: VerificationPresenter | undefined;
-    },
     private memberModule: {
       controller: MemberController | undefined;
       presenter: MemberPresenter | undefined;
@@ -79,10 +71,6 @@ export class AppRouter {
       throw new Error('Journal controller is not initialized');
     }
 
-    if (!this.verificationModule.controller || !this.verificationModule.presenter) {
-      throw new Error('Verification controller or presenter is not initialized');
-    }
-
     if (!this.memberModule.controller || !this.memberModule.presenter) {
       throw new Error('Member controller or presenter is not initialized');
     }
@@ -92,19 +80,6 @@ export class AppRouter {
     }
 
     return [
-      {
-        path: '/account',
-        children: [
-          {
-            path: 'verifying',
-            element: <VerifyingAccountPage controller={this.verificationModule.controller} presenter={this.verificationModule.presenter} />,
-          },
-          {
-            path: 'creating',
-            element: <CreatingAccountPage verificationPresenter={this.verificationModule.presenter} />,
-          },
-        ]
-      },
       {
         path: '/logging-in',
         element: <LoggingInPage
