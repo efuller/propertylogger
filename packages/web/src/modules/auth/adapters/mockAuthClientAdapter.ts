@@ -1,6 +1,9 @@
 import { AuthClient } from '../authClient.ts';
 
 export class MockAuthClientAdapter implements AuthClient {
+  private isAuthed = true;
+  private user = {};
+
   public async login(): Promise<void> {
     return;
   }
@@ -18,7 +21,7 @@ export class MockAuthClientAdapter implements AuthClient {
   }
 
   public async isAuthenticated(): Promise<boolean> {
-    return true;
+    return this.isAuthed;
   }
 
   public async checkSession(): Promise<void> {
@@ -26,6 +29,14 @@ export class MockAuthClientAdapter implements AuthClient {
   }
 
   public async getUser(): Promise<Record<string, never>> {
-    return {};
+    return this.user;
+  }
+
+  public setIsAuthenticated(loggedIn: boolean) {
+    this.isAuthed = loggedIn;
+  }
+
+  public setUser(user: Record<string, string>) {
+    this.user = user;
   }
 }
