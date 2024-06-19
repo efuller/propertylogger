@@ -1,5 +1,6 @@
 import { CompositionRoot } from '../../shared/compositionRoot/compositionRoot.tsx';
 import { MockApiClient } from '../../shared/apiClient/mockApiClient.ts';
+import { Member } from './member.model.ts';
 
 describe('Member', () => {
   let compositionRoot: CompositionRoot;
@@ -16,10 +17,16 @@ describe('Member', () => {
     apiClient.setPostResponse({
       success: true,
       error: false,
-      data: [{ id: '1', email: 'admin@test.com'}],
+      data: { id: '1', email: 'admin@test.com'},
     });
 
-    await controller.createMember({email: 'admin@test.com'});
+    const result = await controller.createMember({email: 'admin@test.com'});
+    console.log('result', result);
+
+    expect(result.success).toBe(true);
+    expect(result.data).not.toBeNull();
+
+    await controller.setMember(result.data as Member);
 
     expect(presenter.viewModel.member?.email).toBe('admin@test.com');
   });
