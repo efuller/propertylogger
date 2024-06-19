@@ -25,16 +25,20 @@ export const LoggingInPage = observer(({
         const user = await controller.getUser();
         const isMember = await memberController.getMemberByEmail(user?.email || '');
 
-        if (!isMember) {
-          await memberController.createMember({
+        if (!isMember.success || !isMember.data) {
+          const result = await memberController.createMember({
             email: user?.email || '',
           });
-          navigate('/app/dashboard');
+          if (result.success && result.data) {
+            await memberController.setMember(result.data);
+            navigate('/app/dashboard');
+          }
         }
         // Check to see if there is a registered member.
         const member = await memberController.getMemberByEmail(user!.email);
 
-        if (member) {
+        if (member.success && member.data) {
+          await memberController.setMember(member.data);
           navigate('/app/dashboard');
         } else {
           navigate('/');
