@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { AuthController } from '../../modules/auth/auth.controller.ts';
 import { AuthPresenter } from '../../modules/auth/auth.presenter.ts';
 import { MemberPresenter } from '../../modules/member/member.presenter.ts';
+import { Button } from '@/components/ui/button.tsx';
 
 interface DashboardPageProps {
   authController: AuthController;
@@ -42,8 +43,14 @@ export const DashboardPage = observer(({
   }
 
   return (
-    <>
-      <div>New HomePage logged in</div>
+    <div className="flex flex-col items-center gap-1 text-center">
+      <h3 className="text-2xl font-bold tracking-tight">
+        You have no properties
+      </h3>
+      <p className="text-sm text-muted-foreground">
+        You can start managing tasks as soon as you add a property.
+      </p>
+      <Button className="mt-4">Add Property</Button>
       <div>
         <h1>Welcome to PropertyLogger</h1>
         <button onClick={handleLogOut}>logout</button>
@@ -52,6 +59,6 @@ export const DashboardPage = observer(({
         }</button>
         <Link to='/app/journals'>Journals</Link>
       </div>
-    </>
+    </div>
   );
 })
