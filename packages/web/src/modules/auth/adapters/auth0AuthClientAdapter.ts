@@ -11,7 +11,9 @@ export class Auth0AuthClientAdapter implements AuthClient {
   }
 
   public async logout(): Promise<void> {
-    await this.auth0Client.logout();
+    await this.auth0Client.logout({
+      logoutParams: { returnTo: window.location.origin },
+    });
   }
 
   public async handleRedirectCallback(): Promise<void> {
