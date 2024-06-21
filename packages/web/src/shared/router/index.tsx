@@ -109,16 +109,15 @@ export class AppRouter {
       },
       {
         path: 'app',
-        element: <AppPage authController={this.authModule.controller} />,
+        element: <AppPage
+          authController={this.authModule.controller}
+          memberPresenter={this.memberModule.presenter}
+        />,
         loader: this.protectedLoader.bind(this),
         children: [
           {
             path: '/app/dashboard',
-            element: <DashboardPage
-              authController={this.authModule.controller}
-              authPresenter={this.authModule.presenter}
-              memberPresenter={this.memberModule.presenter}
-            />,
+            element: <DashboardPage />,
           },
           {
             path: '/app/journals',

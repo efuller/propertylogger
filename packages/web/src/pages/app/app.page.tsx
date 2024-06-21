@@ -32,12 +32,14 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Badge } from '@/components/ui/badge.tsx';
 import { Input } from '@/components/ui/input.tsx';
 import { AuthController } from '@/modules/auth/auth.controller.ts';
+import { MemberPresenter } from '@/modules/member/member.presenter.ts';
 
 interface AppPageProps {
   authController: AuthController;
+  memberPresenter: MemberPresenter;
 }
 
-export function AppPage({ authController }: AppPageProps) {
+export function AppPage({ authController, memberPresenter }: AppPageProps) {
   const navigate = useNavigate();
 
   const handleLogOut = async () => {
@@ -80,9 +82,13 @@ export function AppPage({ authController }: AppPageProps) {
               </Link>
             </nav>
           </div>
-          <div className="mt-auto p-4">
-            hi: admin@test.com
-          </div>
+          {
+            memberPresenter.viewModel.member ? (
+              <div className="mt-auto p-4">
+                {`hi: ${memberPresenter.viewModel.member.email}`}
+              </div>
+            ) : ''
+          }
         </div>
       </div>
       <div className="flex flex-col">
