@@ -109,7 +109,7 @@ export class AppRouter {
       },
       {
         path: 'app',
-        element: <AppPage />,
+        element: <AppPage authController={this.authModule.controller} />,
         loader: this.protectedLoader.bind(this),
         children: [
           {
